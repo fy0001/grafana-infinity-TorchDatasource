@@ -17,6 +17,7 @@ const authTypes: Array<SelectableValue<AuthType | 'others'>> = [
   { value: 'oauthPassThru', label: 'Forward OAuth' },
   { value: 'oauth2', label: 'OAuth2' },
   { value: 'aws', label: 'AWS' },
+  { value: 'zcap', label: 'ZCAP' },
   { value: 'others', label: 'Other Auth Providers' },
 ];
 
@@ -38,6 +39,7 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
       case 'digestAuth':
       case 'apiKey':
       case 'bearerToken':
+      case 'zcap':
       case 'aws':
       case 'oauth2':
       case 'none':
@@ -100,6 +102,25 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
               aria-label="password"
               placeholder="password"
               tooltip="password"
+            />
+          </div>
+        </>
+      )}
+      {authType === 'zcap' && (
+        <>
+          <div className="gf-form">
+            <FormField
+              labelWidth={10}
+              inputWidth={12}
+              required
+              value={secureJsonData.zcapDID || ''}
+              //isConfigured={(secureJsonFields && secureJsonFields.zcapDID) as boolean} to become visible
+              onReset={() => onResetSecret('zcapDID')}
+              onChange={onUpdateDatasourceSecureJsonDataOption(props, 'zcapDID')}
+              label="DID"
+              aria-label="DID"
+              placeholder="zcap-DID"
+              tooltip="Input the DID for the SecureLD"
             />
           </div>
         </>
