@@ -14,6 +14,7 @@ const (
 	AuthenticationMethodNone         = "none"
 	AuthenticationMethodBasic        = "basicAuth"
 	AuthenticationMethodApiKey       = "apiKey"
+	AuthenticationMethodZCap         = "zcap"
 	AuthenticationMethodBearerToken  = "bearerToken"
 	AuthenticationMethodForwardOauth = "oauthPassThru"
 	AuthenticationMethodDigestAuth   = "digestAuth"
@@ -60,6 +61,7 @@ type AWSSettings struct {
 type InfinitySettings struct {
 	AuthenticationMethod string
 	OAuth2Settings       OAuth2Settings
+	ZCap                 string
 	BearerToken          string
 	ApiKeyKey            string
 	ApiKeyType           string
@@ -96,6 +98,9 @@ func (s *InfinitySettings) Validate() error {
 	}
 	if s.AuthenticationMethod == AuthenticationMethodApiKey && (s.ApiKeyValue == "" || s.ApiKeyKey == "") {
 		return errors.New("invalid API key specified")
+	}
+	if s.AuthenticationMethod == AuthenticationMethodZCap && s.ZCap == "" {
+		return errors.New("invalid or empty capabilities file detected")
 	}
 	if s.AuthenticationMethod == AuthenticationMethodBearerToken && s.BearerToken == "" {
 		return errors.New("invalid or empty bearer token detected")
@@ -211,6 +216,9 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 	}
 	if val, ok := config.DecryptedSecureJSONData["tlsClientKey"]; ok {
 		settings.TLSClientKey = val
+	}
+	if val, ok := config.DecryptedSecureJSONData["zcap"]; ok {
+		settings.ZCap = val
 	}
 	if val, ok := config.DecryptedSecureJSONData["bearerToken"]; ok {
 		settings.BearerToken = val
