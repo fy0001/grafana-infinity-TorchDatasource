@@ -53,6 +53,9 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
   const onAPIKeyKeyChange = (apiKeyKey: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, apiKeyKey } });
   };
+  const onZCapPathChange = (zcapPath: string) => {
+    onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapPath} });
+  };
   const onAwsRegionChange = (region: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, aws: { ...options.jsonData?.aws, region } } });
   };
@@ -113,10 +116,8 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
               labelWidth={10}
               inputWidth={12}
               required
-              value={secureJsonData.zcapPath || ''}
-              //isConfigured={(secureJsonFields && secureJsonFields.zcapDID) as boolean} to become visible
-              onReset={() => onResetSecret('zcapPath')}
-              onChange={onUpdateDatasourceSecureJsonDataOption(props, 'zcapPath')}
+              value={props.options.jsonData.zcapPath || ''}
+              onChange={(e) => onZCapPathChange(e.currentTarget.value)}
               label="Capabilities File"
               aria-label="File Path"
               placeholder="Path Directory to json file"
