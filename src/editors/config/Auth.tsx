@@ -113,14 +113,23 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
               labelWidth={10}
               inputWidth={12}
               required
-              value={secureJsonData.zcapDID || ''}
+              value={secureJsonData.zcapPath || ''}
               //isConfigured={(secureJsonFields && secureJsonFields.zcapDID) as boolean} to become visible
-              onReset={() => onResetSecret('zcapDID')}
-              onChange={onUpdateDatasourceSecureJsonDataOption(props, 'zcapDID')}
-              label="DID"
-              aria-label="DID"
-              placeholder="zcap-DID"
-              tooltip="Input the DID for the SecureLD"
+              onReset={() => onResetSecret('zcapPath')}
+              onChange={onUpdateDatasourceSecureJsonDataOption(props, 'zcapPath')}
+              label="Capabilities File"
+              aria-label="File Path"
+              placeholder="Path Directory to json file"
+              tooltip="Input file directory path (/path/to/file.json)"
+            />
+          </div>
+          <div className="gf-form">
+            <FormField
+              label="Env Variable"
+              placeholder="Environment Variable"
+              labelWidth={10}
+              value={secureJsonData.zcapENV || ''}
+              onChange={onUpdateDatasourceSecureJsonDataOption(props, 'zcapENV')}
             />
           </div>
         </>
@@ -232,7 +241,7 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
         </>
       )}
       {authType === 'oauth2' && <OAuthInputsEditor {...props} />}
-      {authType !== 'none' && <AllowedHostsEditor options={options} onOptionsChange={onOptionsChange} />}
+      {(authType !== 'none' && authType !== 'zcap') && <AllowedHostsEditor options={options} onOptionsChange={onOptionsChange} />}
     </>
   );
 };

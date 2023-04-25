@@ -53,7 +53,8 @@ export interface InfinitySecureOptions {
   tlsClientKey?: string;
   apiKeyValue?: string;
   bearerToken?: string;
-  zcapDID?: string; 
+  zcapPath?: string; 
+  zcapENV?: string;
   awsAccessKey?: string;
   awsSecretKey?: string;
   oauth2ClientSecret?: string;
