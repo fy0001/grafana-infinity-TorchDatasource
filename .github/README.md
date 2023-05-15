@@ -43,6 +43,7 @@
   - OAuth2 JWT authentication
   - AWS/Azure/GCP authentication
   - Digest authentication
+  - ZCAP authentication
 - Flexible data manipulation with UQL, GROQ, JSONata
 - Supports alerting, recorded queries, public dashboards, query caching
 - Utility variable functions
