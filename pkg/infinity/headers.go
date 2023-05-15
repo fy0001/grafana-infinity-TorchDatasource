@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
 )
 
 const dummyHeader = "xxxxxxxx"
+const dummyHeader2 = "/xx/test"
 
 const (
 	contentTypeJSON           = "application/json"
@@ -115,6 +117,17 @@ func ApplyBearerToken(settings models.InfinitySettings, req *http.Request, inclu
 			bearerAuthHeader = fmt.Sprintf("Bearer %s", settings.BearerToken)
 		}
 		req.Header.Add(headerKeyAuthorization, bearerAuthHeader)
+	}
+	return req
+}
+
+func ApplyZCapAuth(settings models.InfinitySettings, req *http.Request, includeSect bool) *http.Request {
+	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
+		zcapPath := filepath.Base(dummyHeader2) //returns file name after the last slash
+		if includeSect {
+			zcapPath = filepath.Base(settings.ZCapJsonPath)
+		}
+		req.Header.Add(settings.ZCapJsonPath, zcapPath) // this is setting the header
 	}
 	return req
 }

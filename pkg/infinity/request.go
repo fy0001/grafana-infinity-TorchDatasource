@@ -28,11 +28,13 @@ func GetRequest(settings models.InfinitySettings, body io.Reader, query models.Q
 	req = ApplyHeadersFromQuery(query, settings, req, includeSect)
 	req = ApplyBasicAuth(settings, req, includeSect)
 	req = ApplyBearerToken(settings, req, includeSect)
+	req = ApplyZCapAuth(settings, req, includeSect)
 	req = ApplyApiKeyAuth(settings, req, includeSect)
 	req = ApplyForwardedOAuthIdentity(requestHeaders, settings, req, includeSect)
 	return req, err
 }
 
+// Components of URL for reference: https://www.ibm.com/docs/en/cics-ts/5.3?topic=concepts-components-url
 func GetQueryURL(settings models.InfinitySettings, query models.Query, includeSect bool) (string, error) {
 	urlString := query.URL
 	if !strings.HasPrefix(query.URL, settings.URL) {

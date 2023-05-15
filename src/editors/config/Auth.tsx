@@ -53,8 +53,8 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
   const onAPIKeyKeyChange = (apiKeyKey: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, apiKeyKey } });
   };
-  const onZCapPathChange = (zcapPath: string) => {
-    onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapPath} });
+  const onZCapPathChange = (zcapJsonPath: string) => {
+    onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapJsonPath} });
   };
   const onAwsRegionChange = (region: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, aws: { ...options.jsonData?.aws, region } } });
@@ -116,7 +116,7 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
               labelWidth={10}
               inputWidth={12}
               required
-              value={props.options.jsonData.zcapPath || ''}
+              value={props.options.jsonData.zcapJsonPath || ''}
               onChange={(e) => onZCapPathChange(e.currentTarget.value)}
               label="Capabilities File"
               aria-label="File Path"
@@ -242,7 +242,10 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
         </>
       )}
       {authType === 'oauth2' && <OAuthInputsEditor {...props} />}
-      {(authType !== 'none' && authType !== 'zcap') && <AllowedHostsEditor options={options} onOptionsChange={onOptionsChange} />}
+      {authType !== 'none' && <AllowedHostsEditor options={options} onOptionsChange={onOptionsChange} />} 
+      {/*(authType !== 'none' && authType !== 'zcap') --to remove allowed hosts field from zcap*/}
+      
+      
     </>
   );
 };
