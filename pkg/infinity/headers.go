@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
-	"path/filepath"
 	"strings"
 
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
@@ -123,11 +122,14 @@ func ApplyBearerToken(settings models.InfinitySettings, req *http.Request, inclu
 
 func ApplyZCapAuth(settings models.InfinitySettings, req *http.Request, includeSect bool) *http.Request {
 	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
-		zcapPath := filepath.Base(dummyHeader2) //returns file name after the last slash
+		//zcapPath := filepath.Base(dummyHeader2) //returns file name after the last slash
+		zcapKeyHeader := dummyHeader
 		if includeSect {
-			zcapPath = filepath.Base(settings.ZCapJsonPath)
+			zcapKeyHeader = settings.ZCapKey
+			//zcapPath = filepath.Base(settings.ZCapJsonPath)
 		}
-		req.Header.Add(settings.ZCapJsonPath, zcapPath) // this is setting the header
+		req.Header.Add(settings.ZCapKey, zcapKeyHeader)
+		//req.Header.Add(settings.ZCapJsonPath, zcapPath)  this is setting the header
 	}
 	return req
 }

@@ -183,12 +183,21 @@ func TestClient_GetExecutedURL(t *testing.T) {
 			url:      "https://foo.com",
 			command:  "curl -X 'GET' -H 'Authorization: Bearer xxxxxxxx' 'https://foo.com'",
 		},
+
+		/*tested finding a file from a given directory path
 		{
 			settings: models.InfinitySettings{AuthenticationMethod: "zcap", ZCapJsonPath: "/path/config.json"},
 			query:    models.Query{URL: "https://foo.com"},
 			url:      "https://foo.com",
 			command:  "curl -X 'GET' -H '/path/config.json: test' 'https://foo.com'",
+		},*/
+		{
+			settings: models.InfinitySettings{AuthenticationMethod: "zcap", ZCapKey: "Key", ZCapKeyValue: "keyinfotest"},
+			query:    models.Query{URL: "https://foo.com"},
+			url:      "https://foo.com",
+			command:  "curl -X 'GET' -H 'Key: xxxxxxxx' 'https://foo.com'",
 		},
+
 		{
 			settings: models.InfinitySettings{AuthenticationMethod: "apiKey", ApiKeyType: "header", ApiKeyKey: "hello", ApiKeyValue: "world"},
 			query:    models.Query{URL: "https://foo.com"},
