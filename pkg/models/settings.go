@@ -59,39 +59,41 @@ type AWSSettings struct {
 }
 
 type InfinitySettings struct {
-	AuthenticationMethod string
-	OAuth2Settings       OAuth2Settings
-	BearerToken          string
-	ZCapKey              string
-	ZCapKeyValue         string
-	ZCapJsonPath         string //InfinitySettings for capabilites.json file path
-	ApiKeyKey            string
-	ApiKeyType           string
-	ApiKeyValue          string
-	AWSSettings          AWSSettings
-	AWSAccessKey         string
-	AWSSecretKey         string
-	URL                  string
-	BasicAuthEnabled     bool
-	UserName             string
-	Password             string
-	ForwardOauthIdentity bool
-	CustomHeaders        map[string]string
-	SecureQueryFields    map[string]string
-	InsecureSkipVerify   bool
-	ServerName           string
-	TimeoutInSeconds     int64
-	TLSClientAuth        bool
-	TLSAuthWithCACert    bool
-	TLSCACert            string
-	TLSClientCert        string
-	TLSClientKey         string
-	AllowedHosts         []string
-	EnableOpenAPI        bool
-	OpenAPIVersion       string
-	OpenAPIUrl           string
-	OpenAPIBaseUrl       string
-	ReferenceData        []RefData
+	AuthenticationMethod     string
+	OAuth2Settings           OAuth2Settings
+	BearerToken              string
+	ZCapKey                  string
+	ZCapKeyValue             string
+	ZCapJsonPath             string //InfinitySettings for capabilites.json file path
+	ApiKeyKey                string
+	ApiKeyType               string
+	ApiKeyValue              string
+	AWSSettings              AWSSettings
+	AWSAccessKey             string
+	AWSSecretKey             string
+	URL                      string
+	BasicAuthEnabled         bool
+	UserName                 string
+	Password                 string
+	ForwardOauthIdentity     bool
+	CustomHeaders            map[string]string
+	SecureQueryFields        map[string]string
+	InsecureSkipVerify       bool
+	ServerName               string
+	TimeoutInSeconds         int64
+	TLSClientAuth            bool
+	TLSAuthWithCACert        bool
+	TLSCACert                string
+	TLSClientCert            string
+	TLSClientKey             string
+	AllowedHosts             []string
+	EnableOpenAPI            bool
+	OpenAPIVersion           string
+	OpenAPIUrl               string
+	OpenAPIBaseUrl           string
+	ReferenceData            []RefData
+	CustomHealthCheckEnabled bool
+	CustomHealthCheckUrl     string
 }
 
 func (s *InfinitySettings) Validate() error {
@@ -138,25 +140,27 @@ type RefData struct {
 }
 
 type InfinitySettingsJson struct {
-	AuthenticationMethod string         `json:"auth_method,omitempty"`
-	APIKeyKey            string         `json:"apiKeyKey,omitempty"`
-	APIKeyType           string         `json:"apiKeyType,omitempty"`
-	ZCapKey              string         `json:"zCapKeyType,omitempty"`
-	ZCapJsonPath         string         `json:"zCapJsonPath,omitempty"`
-	OAuth2Settings       OAuth2Settings `json:"oauth2,omitempty"`
-	AWSSettings          AWSSettings    `json:"aws,omitempty"`
-	ForwardOauthIdentity bool           `json:"oauthPassThru,omitempty"`
-	InsecureSkipVerify   bool           `json:"tlsSkipVerify,omitempty"`
-	ServerName           string         `json:"serverName,omitempty"`
-	TLSClientAuth        bool           `json:"tlsAuth,omitempty"`
-	TLSAuthWithCACert    bool           `json:"tlsAuthWithCACert,omitempty"`
-	TimeoutInSeconds     int64          `json:"timeoutInSeconds,omitempty"`
-	AllowedHosts         []string       `json:"allowedHosts,omitempty"`
-	EnableOpenAPI        bool           `json:"enableOpenApi,omitempty"`
-	OpenAPIVersion       string         `json:"openApiVersion,omitempty"`
-	OpenAPIUrl           string         `json:"openApiUrl,omitempty"`
-	OpenAPIBaseUrl       string         `json:"openAPIBaseURL,omitempty"`
-	ReferenceData        []RefData      `json:"refData,omitempty"`
+	AuthenticationMethod     string         `json:"auth_method,omitempty"`
+	APIKeyKey                string         `json:"apiKeyKey,omitempty"`
+	APIKeyType               string         `json:"apiKeyType,omitempty"`
+	ZCapKey                  string         `json:"zCapKeyType,omitempty"`
+	ZCapJsonPath             string         `json:"zCapJsonPath,omitempty"`
+	OAuth2Settings           OAuth2Settings `json:"oauth2,omitempty"`
+	AWSSettings              AWSSettings    `json:"aws,omitempty"`
+	ForwardOauthIdentity     bool           `json:"oauthPassThru,omitempty"`
+	InsecureSkipVerify       bool           `json:"tlsSkipVerify,omitempty"`
+	ServerName               string         `json:"serverName,omitempty"`
+	TLSClientAuth            bool           `json:"tlsAuth,omitempty"`
+	TLSAuthWithCACert        bool           `json:"tlsAuthWithCACert,omitempty"`
+	TimeoutInSeconds         int64          `json:"timeoutInSeconds,omitempty"`
+	AllowedHosts             []string       `json:"allowedHosts,omitempty"`
+	EnableOpenAPI            bool           `json:"enableOpenApi,omitempty"`
+	OpenAPIVersion           string         `json:"openApiVersion,omitempty"`
+	OpenAPIUrl               string         `json:"openApiUrl,omitempty"`
+	OpenAPIBaseUrl           string         `json:"openAPIBaseURL,omitempty"`
+	ReferenceData            []RefData      `json:"refData,omitempty"`
+	CustomHealthCheckEnabled bool           `json:"customHealthCheckEnabled,omitempty"`
+	CustomHealthCheckUrl     string         `json:"customHealthCheckUrl,omitempty"`
 }
 
 func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinitySettings, err error) {
@@ -208,6 +212,8 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 	settings.OpenAPIUrl = infJson.OpenAPIUrl
 	settings.OpenAPIBaseUrl = infJson.OpenAPIBaseUrl
 	settings.ReferenceData = infJson.ReferenceData
+	settings.CustomHealthCheckEnabled = infJson.CustomHealthCheckEnabled
+	settings.CustomHealthCheckUrl = infJson.CustomHealthCheckUrl
 	if val, ok := config.DecryptedSecureJSONData["basicAuthPassword"]; ok {
 		settings.Password = val
 	}
