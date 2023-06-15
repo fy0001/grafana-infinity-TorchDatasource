@@ -62,8 +62,7 @@ type InfinitySettings struct {
 	AuthenticationMethod     string
 	OAuth2Settings           OAuth2Settings
 	BearerToken              string
-	ZCapKey                  string
-	ZCapKeyValue             string
+	ZCapSeed                 string
 	ZCapJsonPath             string //InfinitySettings for capabilites.json file path
 	ApiKeyKey                string
 	ApiKeyType               string
@@ -106,7 +105,7 @@ func (s *InfinitySettings) Validate() error {
 	if s.AuthenticationMethod == AuthenticationMethodBearerToken && s.BearerToken == "" {
 		return errors.New("invalid or empty bearer token detected")
 	}
-	if s.AuthenticationMethod == AuthenticationMethodZCAP && (s.ZCapJsonPath == "" || s.ZCapKey == "" || s.ZCapKeyValue == "") {
+	if s.AuthenticationMethod == AuthenticationMethodZCAP && (s.ZCapJsonPath == "" || s.ZCapSeed == "") {
 		return errors.New("invalid or empty zcap capabilities file and or key")
 	} //if there is no file path or is invalid
 	if s.AuthenticationMethod != AuthenticationMethodNone && len(s.AllowedHosts) < 1 {
@@ -143,7 +142,7 @@ type InfinitySettingsJson struct {
 	AuthenticationMethod     string         `json:"auth_method,omitempty"`
 	APIKeyKey                string         `json:"apiKeyKey,omitempty"`
 	APIKeyType               string         `json:"apiKeyType,omitempty"`
-	ZCapKey                  string         `json:"zCapKeyType,omitempty"`
+	ZCapSeed                 string         `json:"zCapSeed,omitempty"`
 	ZCapJsonPath             string         `json:"zCapJsonPath,omitempty"`
 	OAuth2Settings           OAuth2Settings `json:"oauth2,omitempty"`
 	AWSSettings              AWSSettings    `json:"aws,omitempty"`
@@ -182,10 +181,7 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 		}
 		settings.ApiKeyKey = infJson.APIKeyKey
 		settings.ApiKeyType = infJson.APIKeyType
-		settings.ZCapKey = infJson.ZCapKey
-		if val, ok := config.DecryptedSecureJSONData["zCapKeyValue"]; ok {
-			settings.ZCapKeyValue = val
-		}
+		settings.ZCapSeed = infJson.ZCapSeed
 		settings.ZCapJsonPath = infJson.ZCapJsonPath
 		settings.AWSSettings = infJson.AWSSettings
 		if settings.ApiKeyType == "" {

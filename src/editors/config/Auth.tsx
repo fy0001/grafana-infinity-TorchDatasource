@@ -90,8 +90,8 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
   const onAPIKeyKeyChange = (apiKeyKey: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, apiKeyKey } });
   };
-  const onZCapKeyChange = (zcapKey: string) => {
-    onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapKey } });
+  const onZCapKeyChange = (zcapSeed: string) => {
+    onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapSeed } });
   };
   const onZCapPathChange = (zcapJsonPath: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapJsonPath} });
@@ -187,37 +187,14 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
           </div>
           <div className="gf-form">
             <FormField
-              label="ZCAP Key"
-              placeholder="ZCAP Key"
+              label="DID Seed"
+              placeholder="DID:SEED"
               tooltip=""
               labelWidth={10}
-              value={props.options.jsonData.zcapKey || ''}
+              value={props.options.jsonData.zcapSeed || ''}
               onChange={(e) => onZCapKeyChange(e.currentTarget.value)}
             />
              </div>
-          <div className="gf-form">
-            <SecretFormField
-              labelWidth={10}
-              inputWidth={12}
-              required
-              value={secureJsonData.zcapKeyValue || ''}
-              isConfigured={(secureJsonFields && secureJsonFields.zcapKeyValue) as boolean}
-              onReset={() => onResetSecret('zcapKeyValue')}
-              onChange={onUpdateDatasourceSecureJsonDataOption(props, 'zcapKeyValue')}
-              label="ZCAP Key Value"
-              aria-label="key"
-              placeholder="Enter given Key"
-            />
-          </div>
-          <div className="gf-form">
-            <FormField
-              label="Env Variable"
-              placeholder="Environment Variable"
-              labelWidth={10}
-              value={secureJsonData.zcapENV || ''}
-              onChange={onUpdateDatasourceSecureJsonDataOption(props, 'zcapENV')}
-            />
-          </div>
         </>
       )}
             {authType === 'bearerToken' && (

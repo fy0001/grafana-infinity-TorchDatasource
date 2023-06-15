@@ -31,7 +31,7 @@ export interface InfinityOptions extends DataSourceJsonData {
   apiKeyType?: APIKeyType;
   oauth2?: OAuth2Props;
   aws?: AWSAuthProps;
-  zcapKey?: string,
+  zcapSeed?: string,
   zcapJsonPath?: string; 
   tlsSkipVerify?: boolean;
   tlsAuth?: boolean;
@@ -57,8 +57,6 @@ export interface InfinitySecureOptions {
   tlsClientKey?: string;
   apiKeyValue?: string;
   bearerToken?: string;
-  zcapKeyValue?: string;
-  zcapENV?: string;
   awsAccessKey?: string;
   awsSecretKey?: string;
   oauth2ClientSecret?: string;

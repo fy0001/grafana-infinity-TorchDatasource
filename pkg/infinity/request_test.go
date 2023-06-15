@@ -192,7 +192,7 @@ func TestClient_GetExecutedURL(t *testing.T) {
 			command:  "curl -X 'GET' -H '/path/config.json: test' 'https://foo.com'",
 		},*/
 		{
-			settings: models.InfinitySettings{AuthenticationMethod: "zcap", ZCapKey: "Key", ZCapKeyValue: "keyinfotest"},
+			settings: models.InfinitySettings{AuthenticationMethod: "zcap", ZCapSeed: "Key"},
 			query:    models.Query{URL: "https://foo.com"},
 			url:      "https://foo.com",
 			command:  "curl -X 'GET' -H 'Key: xxxxxxxx' 'https://foo.com'",
