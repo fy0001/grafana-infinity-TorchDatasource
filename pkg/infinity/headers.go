@@ -8,9 +8,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/dop251/goja"
-	"github.com/dop251/goja_nodejs/console"
-	"github.com/dop251/goja_nodejs/require"
+	//"github.com/dop251/goja"
+	//"github.com/dop251/goja_nodejs/console"
+	//"github.com/dop251/goja_nodejs/require"
+
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
 )
 
@@ -99,49 +100,6 @@ func ApplyHeadersFromQuery(query models.Query, settings models.InfinitySettings,
 		}
 	}
 	return req
-}
-
-func getMercury() *goja.Object {
-	vm := goja.New()
-	registry := new(require.Registry)
-	registry.Enable(vm)
-	console.Enable(vm)
-
-	script := `
-		function myFunction(param)
-		{
-			console.log("myFunction running ...")
-			console.log("Param = ", param)
-			return "Nice meeting you, Go"
-		}
-		`
-
-	fmt.Println("Compiling ... ")
-	prog, err := goja.Compile("", script, true)
-	if err != nil {
-		fmt.Printf("Error compiling the script %v ", err)
-
-	}
-
-	fmt.Println("Running ... \n ")
-	_, err = vm.RunProgram(prog)
-
-	var myJSFunc goja.Callable
-	err = vm.ExportTo(vm.Get("myFunction"), &myJSFunc)
-	if err != nil {
-		fmt.Printf("Error exporting the function %v", err)
-
-	}
-
-	toGoValue, err := myJSFunc(goja.Undefined(), vm.ToValue("message from go"))
-	if err != nil {
-		fmt.Printf("Error calling function %v", err)
-
-	}
-
-	fmt.Printf("Returned value from JS function\n%s \n", toGoValue.ToString())
-
-	return toGoValue.ToString().ToObject(vm)
 }
 
 func ApplyZCapAuth(settings models.InfinitySettings, req *http.Request, includeSect bool) *http.Request {
