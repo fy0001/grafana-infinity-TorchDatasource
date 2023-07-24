@@ -17,20 +17,8 @@ export const isBackendQuerySupported = (
 export const isBackendQuery = (
   query: InfinityQuery
 ): query is Extract<InfinityQuery, ({ type: 'json' } | { type: 'csv' } | { type: 'tsv' } | { type: 'xml' } | { type: 'graphql' } | { type: 'html' }) & { parser: 'backend' }> =>
-  isBackendQuerySupported(query) && query.parser === 'backend';
+  query.type === 'transformations' || (isBackendQuerySupported(query) && query.parser === 'backend');
 
-export const normalizeURL = (url: string): string => {
-  if (url.startsWith('https://github.com')) {
-    return url
-      .replace('https://github.com', 'https://raw.githubusercontent.com')
-      .split('/')
-      .filter((item, index) => {
-        return !(item === 'blob' && index === 5);
-      })
-      .join('/');
-  }
-  return url;
-};
 export const isDataQuery = (query: InfinityQuery): query is InfinityQueryWithDataSource<any> => {
   switch (query.type) {
     case 'csv':

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"golang.org/x/oauth2"
 )
 
 const (
@@ -34,13 +35,14 @@ const (
 )
 
 type OAuth2Settings struct {
-	OAuth2Type     string   `json:"oauth2_type,omitempty"`
-	ClientID       string   `json:"client_id,omitempty"`
-	TokenURL       string   `json:"token_url,omitempty"`
-	Email          string   `json:"email,omitempty"`
-	PrivateKeyID   string   `json:"private_key_id,omitempty"`
-	Subject        string   `json:"subject,omitempty"`
-	Scopes         []string `json:"scopes,omitempty"`
+	OAuth2Type     string           `json:"oauth2_type,omitempty"`
+	ClientID       string           `json:"client_id,omitempty"`
+	TokenURL       string           `json:"token_url,omitempty"`
+	Email          string           `json:"email,omitempty"`
+	PrivateKeyID   string           `json:"private_key_id,omitempty"`
+	Subject        string           `json:"subject,omitempty"`
+	Scopes         []string         `json:"scopes,omitempty"`
+	AuthStyle      oauth2.AuthStyle `json:"authStyle,omitempty"`
 	ClientSecret   string
 	PrivateKey     string
 	EndpointParams map[string]string
@@ -59,6 +61,7 @@ type AWSSettings struct {
 }
 
 type InfinitySettings struct {
+	IsMock                   bool
 	AuthenticationMethod     string
 	OAuth2Settings           OAuth2Settings
 	BearerToken              string
@@ -139,6 +142,7 @@ type RefData struct {
 }
 
 type InfinitySettingsJson struct {
+	IsMock                   bool           `json:"is_mock,omitempty"`
 	AuthenticationMethod     string         `json:"auth_method,omitempty"`
 	APIKeyKey                string         `json:"apiKeyKey,omitempty"`
 	APIKeyType               string         `json:"apiKeyType,omitempty"`
@@ -174,6 +178,7 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 		if err := json.Unmarshal(config.JSONData, &infJson); err != nil {
 			return settings, err
 		}
+		settings.IsMock = infJson.IsMock
 		settings.AuthenticationMethod = infJson.AuthenticationMethod
 		settings.OAuth2Settings = infJson.OAuth2Settings
 		if settings.AuthenticationMethod == "oauth2" && settings.OAuth2Settings.OAuth2Type == "" {
