@@ -28,7 +28,6 @@ func GetRequest(settings models.InfinitySettings, body io.Reader, query models.Q
 	req = ApplyHeadersFromQuery(query, settings, req, includeSect)
 	req = ApplyBasicAuth(settings, req, includeSect)
 	req = ApplyBearerToken(settings, req, includeSect)
-	req = ApplyZCapAuth(settings, req, includeSect)
 	req = ApplyApiKeyAuth(settings, req, includeSect)
 	req = ApplyForwardedOAuthIdentity(requestHeaders, settings, req, includeSect)
 	return req, err

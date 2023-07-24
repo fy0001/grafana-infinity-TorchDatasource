@@ -8,10 +8,6 @@ import (
 	"net/http"
 	"strings"
 
-	//"github.com/dop251/goja"
-	//"github.com/dop251/goja_nodejs/console"
-	//"github.com/dop251/goja_nodejs/require"
-
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
 )
 
@@ -102,20 +98,20 @@ func ApplyHeadersFromQuery(query models.Query, settings models.InfinitySettings,
 	return req
 }
 
-func ApplyZCapAuth(settings models.InfinitySettings, req *http.Request, includeSect bool) *http.Request {
+/*
+func ApplyZCapAuth(settings models.InfinitySettings, includeSect bool)  {
 
 	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
-		//zcapPath := filepath.Base(dummyHeader2) //returns file name after the last slash
-		zcapKeyHeader := dummyHeader
+		zcapInputCapabilities := dummyHeader
+		zcapInputSeed := dummyHeader
 		if includeSect {
-			zcapKeyHeader = settings.ZCapSeed
-			//zcapPath = filepath.Base(settings.ZCapJsonPath)
+			zcapInputCapabilities = settings.ZCapJsonPath
+			zcapInputSeed = settings.ZCapSeed
 		}
-		req.Header.Add(settings.ZCapSeed, zcapKeyHeader)
-		//req.Header.Add(settings.ZCapJsonPath, zcapPath)  this is setting the header
+
+		_, _= zcapInputCapabilities, zcapInputSeed
 	}
-	return req
-}
+}*/
 
 func ApplyBasicAuth(settings models.InfinitySettings, req *http.Request, includeSect bool) *http.Request {
 	if settings.BasicAuthEnabled && (settings.UserName != "" || settings.Password != "") {

@@ -12,10 +12,12 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/mercury"
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
 )
 
@@ -102,8 +104,32 @@ func replaceSect(input string, settings models.InfinitySettings, includeSect boo
 	return input
 }
 
+var includeSect bool = true
+
 func (client *Client) req(ctx context.Context, url string, body io.Reader, settings models.InfinitySettings, query models.Query, requestHeaders map[string]string) (obj any, statusCode int, duration time.Duration, err error) {
+
 	req, _ := GetRequest(settings, body, query, requestHeaders, true)
+
+	//Zcap function with mercury
+	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
+		zcapInputCapabilities := dummyHeader
+		zcapInputSeed := dummyHeader
+		if includeSect {
+			zcapInputCapabilities = filepath.Base(settings.ZCapJsonPath)
+			zcapInputSeed = settings.ZCapSeed
+		}
+
+		_ = zcapInputSeed
+
+		var operation string = "request"
+
+		var target string = zcapInputCapabilities
+
+		content, data, err := mercury.Request(operation, target)
+		_, _, _ = content, data, err
+
+	}
+
 	startTime := time.Now()
 	if !CanAllowURL(req.URL.String(), settings.AllowedHosts) {
 		backend.Logger.Error("url is not in the allowed list. make sure to match the base URL with the settings", "url", req.URL.String())

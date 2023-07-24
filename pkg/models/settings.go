@@ -62,7 +62,7 @@ type InfinitySettings struct {
 	AuthenticationMethod     string
 	OAuth2Settings           OAuth2Settings
 	BearerToken              string
-	ZCapSeed                 string
+	ZCapSeed                 string //InfinitySettings for secret seed
 	ZCapJsonPath             string //InfinitySettings for capabilites.json file path
 	ApiKeyKey                string
 	ApiKeyType               string
@@ -106,7 +106,7 @@ func (s *InfinitySettings) Validate() error {
 		return errors.New("invalid or empty bearer token detected")
 	}
 	if s.AuthenticationMethod == AuthenticationMethodZCAP && (s.ZCapJsonPath == "" || s.ZCapSeed == "") {
-		return errors.New("invalid or empty zcap capabilities file and or key")
+		return errors.New("invalid or empty zcap capabilities file and or seed")
 	} //if there is no file path or is invalid
 	if s.AuthenticationMethod != AuthenticationMethodNone && len(s.AllowedHosts) < 1 {
 		return errors.New("configure allowed hosts in the authentication section")
