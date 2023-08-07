@@ -62,8 +62,7 @@ type InfinitySettings struct {
 	AuthenticationMethod     string
 	OAuth2Settings           OAuth2Settings
 	BearerToken              string
-	ZCapSeed                 string //InfinitySettings for secret seed
-	ZCapJsonPath             string //InfinitySettings for capabilites.json file path
+	ZCapJsonPath             string //Field for InfinitySettings target resource
 	ApiKeyKey                string
 	ApiKeyType               string
 	ApiKeyValue              string
@@ -105,10 +104,10 @@ func (s *InfinitySettings) Validate() error {
 	if s.AuthenticationMethod == AuthenticationMethodBearerToken && s.BearerToken == "" {
 		return errors.New("invalid or empty bearer token detected")
 	}
-	if s.AuthenticationMethod == AuthenticationMethodZCAP && (s.ZCapJsonPath == "" || s.ZCapSeed == "") {
-		return errors.New("invalid or empty zcap capabilities file and or seed")
-	} //if there is no file path or is invalid
-	if s.AuthenticationMethod != AuthenticationMethodNone && len(s.AllowedHosts) < 1 {
+	if s.AuthenticationMethod == AuthenticationMethodZCAP && (s.ZCapJsonPath == "" || !strings.HasPrefix(s.ZCapJsonPath, "https")) {
+		return errors.New("invalid or empty zcap request url")
+	}
+	if (s.AuthenticationMethod != AuthenticationMethodNone && s.AuthenticationMethod != AuthenticationMethodZCAP) && len(s.AllowedHosts) < 1 {
 		return errors.New("configure allowed hosts in the authentication section")
 	}
 	if s.HaveSecureHeaders() && len(s.AllowedHosts) < 1 {
@@ -142,7 +141,6 @@ type InfinitySettingsJson struct {
 	AuthenticationMethod     string         `json:"auth_method,omitempty"`
 	APIKeyKey                string         `json:"apiKeyKey,omitempty"`
 	APIKeyType               string         `json:"apiKeyType,omitempty"`
-	ZCapSeed                 string         `json:"zCapSeed,omitempty"`
 	ZCapJsonPath             string         `json:"zCapJsonPath,omitempty"`
 	OAuth2Settings           OAuth2Settings `json:"oauth2,omitempty"`
 	AWSSettings              AWSSettings    `json:"aws,omitempty"`
@@ -181,7 +179,6 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 		}
 		settings.ApiKeyKey = infJson.APIKeyKey
 		settings.ApiKeyType = infJson.APIKeyType
-		settings.ZCapSeed = infJson.ZCapSeed
 		settings.ZCapJsonPath = infJson.ZCapJsonPath
 		settings.AWSSettings = infJson.AWSSettings
 		if settings.ApiKeyType == "" {

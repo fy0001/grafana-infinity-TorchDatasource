@@ -98,21 +98,6 @@ func ApplyHeadersFromQuery(query models.Query, settings models.InfinitySettings,
 	return req
 }
 
-/*
-func ApplyZCapAuth(settings models.InfinitySettings, includeSect bool)  {
-
-	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
-		zcapInputCapabilities := dummyHeader
-		zcapInputSeed := dummyHeader
-		if includeSect {
-			zcapInputCapabilities = settings.ZCapJsonPath
-			zcapInputSeed = settings.ZCapSeed
-		}
-
-		_, _= zcapInputCapabilities, zcapInputSeed
-	}
-}*/
-
 func ApplyBasicAuth(settings models.InfinitySettings, req *http.Request, includeSect bool) *http.Request {
 	if settings.BasicAuthEnabled && (settings.UserName != "" || settings.Password != "") {
 		basicAuthHeader := fmt.Sprintf("Basic %s", dummyHeader)

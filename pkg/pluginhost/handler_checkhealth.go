@@ -37,6 +37,7 @@ func CheckHealth(ctx context.Context, ds *PluginHost, req *backend.CheckHealthRe
 	if client.client.Settings.OAuth2Settings.OAuth2Type != "" {
 		args = append(args, "OAuth2Type", client.client.Settings.OAuth2Settings.OAuth2Type)
 	}
+
 	backend.Logger.Info("performing CheckHealth in infinity datasource", args...)
 	if err = client.client.Settings.Validate(); err != nil {
 		return &backend.CheckHealthResult{

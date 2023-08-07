@@ -12,7 +12,6 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -106,29 +105,40 @@ func replaceSect(input string, settings models.InfinitySettings, includeSect boo
 
 var includeSect bool = true
 
-func (client *Client) req(ctx context.Context, url string, body io.Reader, settings models.InfinitySettings, query models.Query, requestHeaders map[string]string) (obj any, statusCode int, duration time.Duration, err error) {
-
-	req, _ := GetRequest(settings, body, query, requestHeaders, true)
-
-	//Zcap function with mercury
+func ApplyZCapAuth1(settings models.InfinitySettings) (string, string, error) {
+	var contentT []byte
+	var dataT []byte
+	var err error
 	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
-		zcapInputCapabilities := dummyHeader
-		zcapInputSeed := dummyHeader
+		zcapInputTarget := dummyHeader
+
 		if includeSect {
-			zcapInputCapabilities = filepath.Base(settings.ZCapJsonPath)
-			zcapInputSeed = settings.ZCapSeed
+			zcapInputTarget = settings.ZCapJsonPath
+
 		}
-
-		_ = zcapInputSeed
-
-		var operation string = "request"
-
-		var target string = zcapInputCapabilities
+		var operation string = "download"
+		var target string = zcapInputTarget
 
 		content, data, err := mercury.Request(operation, target)
-		_, _, _ = content, data, err
+		//download - data
+		//request - content
+
+		if err != nil {
+			fmt.Errorf("Error:", err)
+
+		}
+		contentT = content
+		dataT = data
 
 	}
+
+	return string(contentT), string(dataT), err
+
+}
+
+func (client *Client) req(ctx context.Context, url string, body io.Reader, settings models.InfinitySettings, query models.Query, requestHeaders map[string]string) (obj any, statusCode int, duration time.Duration, err error) {
+	ApplyZCapAuth1(settings)
+	req, _ := GetRequest(settings, body, query, requestHeaders, true)
 
 	startTime := time.Now()
 	if !CanAllowURL(req.URL.String(), settings.AllowedHosts) {

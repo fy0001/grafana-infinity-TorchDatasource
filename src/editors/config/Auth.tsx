@@ -90,9 +90,6 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
   const onAPIKeyKeyChange = (apiKeyKey: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, apiKeyKey } });
   };
-  const onZCapKeyChange = (zcapSeed: string) => {
-    onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapSeed } });
-  };
   const onZCapPathChange = (zcapJsonPath: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, zcapJsonPath} });
   };
@@ -179,22 +176,12 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
               required
               value={props.options.jsonData.zcapJsonPath || ''}
               onChange={(e) => onZCapPathChange(e.currentTarget.value)}
-              label="Capabilities File"
-              aria-label="File Path"
-              placeholder="Path Directory to json file"
-              tooltip="Input file directory path (/path/to/file.json)"
+              label="Resource Target"
+              aria-label="Target URL"
+              placeholder="Target Resource URL"
+              tooltip="Input the url for the resource"
             />
           </div>
-          <div className="gf-form">
-            <FormField
-              label="DID Seed"
-              placeholder="DID:SEED"
-              tooltip=""
-              labelWidth={10}
-              value={props.options.jsonData.zcapSeed || ''}
-              onChange={(e) => onZCapKeyChange(e.currentTarget.value)}
-            />
-             </div>
         </>
       )}
             {authType === 'bearerToken' && (
@@ -307,13 +294,12 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
           </div>
         </>
       )}
-      {authType !== 'none' && !othersOpen && (
+      { (authType !== 'none' && authType !== 'zcap') && !othersOpen && (
         <>
           <h5 className={styles.subheading}>Allowed hosts</h5>
           <AllowedHostsEditor options={options} onOptionsChange={onOptionsChange} />
         </>
       )} 
-      {/*(authType !== 'none' && authType !== 'zcap') --to remove allowed hosts field from zcap*/}
       
       
     </>
