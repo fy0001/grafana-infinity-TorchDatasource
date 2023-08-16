@@ -105,48 +105,69 @@ func replaceSect(input string, settings models.InfinitySettings, includeSect boo
 
 var includeSect bool = true
 
-func ApplyZCapAuth1(settings models.InfinitySettings) (string, string, error) {
+func ApplyZCapAuth(settings models.InfinitySettings) (string, string, error) {
 	var contentT []byte
 	var dataT []byte
 	var err error
-	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
-		zcapInputTarget := dummyHeader
 
-		if includeSect {
-			zcapInputTarget = settings.ZCapJsonPath
+	zcapInputTarget := dummyHeader
 
-		}
-		var operation string = "download"
-		var target string = zcapInputTarget
-
-		content, data, err := mercury.Request(operation, target)
-		//download - data
-		//request - content
-
-		if err != nil {
-			fmt.Errorf("Error:", err)
-
-		}
-		contentT = content
-		dataT = data
+	if includeSect {
+		zcapInputTarget = settings.ZCapJsonPath
 
 	}
+	var operation string = "download"
+	var target string = zcapInputTarget
+
+	content, data, err := mercury.Request(operation, target)
+	//download - data
+	//request - content
+
+	if err != nil {
+		backend.Logger.Error("Error:", err)
+	}
+	contentT = content
+	dataT = data
 
 	return string(contentT), string(dataT), err
 
 }
 
 func (client *Client) req(ctx context.Context, url string, body io.Reader, settings models.InfinitySettings, query models.Query, requestHeaders map[string]string) (obj any, statusCode int, duration time.Duration, err error) {
-	ApplyZCapAuth1(settings)
+
 	req, _ := GetRequest(settings, body, query, requestHeaders, true)
+	startTime := time.Now()
+	if !CanAllowURL(req.URL.String(), settings.AllowedHosts) {
+		backend.Logger.Error("url is not in the allowed list. make sure to match the base URL with the settings", "url", req.URL.String())
+		return nil, http.StatusUnauthorized, 0, errors.New("requested URL is not allowed. To allow this URL, update the datasource config Security -> Allowed Hosts section")
+	}
+
+	res, err := client.HttpClient.Do(req)
+
+	// Use MercuryClient for zCap Authenticated Requests
+	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
+		console, data, err := ApplyZCapAuth(settings)
+
+		backend.Logger.Info("entered in zcap", console)
+		res.StatusCode = 200
+		duration = time.Since(startTime)
+
+		return data, res.StatusCode, duration, err
+	}
+
+	/*req, _ := GetRequest(settings, body, query, requestHeaders, true)
 
 	startTime := time.Now()
 	if !CanAllowURL(req.URL.String(), settings.AllowedHosts) {
 		backend.Logger.Error("url is not in the allowed list. make sure to match the base URL with the settings", "url", req.URL.String())
 		return nil, http.StatusUnauthorized, 0, errors.New("requested URL is not allowed. To allow this URL, update the datasource config Security -> Allowed Hosts section")
 	}
-	res, err := client.HttpClient.Do(req)
+
+
+	res, err := client.HttpClient.Do(req)*/
+
 	duration = time.Since(startTime)
+
 	if res != nil {
 		defer res.Body.Close()
 	}
