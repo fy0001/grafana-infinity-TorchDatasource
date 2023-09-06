@@ -1,6 +1,7 @@
 package infinity
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,7 +12,7 @@ import (
 	"moul.io/http2curl"
 )
 
-func GetRequest(settings models.InfinitySettings, body io.Reader, query models.Query, requestHeaders map[string]string, includeSect bool) (req *http.Request, err error) {
+func GetRequest(ctx context.Context, settings models.InfinitySettings, body io.Reader, query models.Query, requestHeaders map[string]string, includeSect bool) (req *http.Request, err error) {
 	url, err := GetQueryURL(settings, query, includeSect)
 	if err != nil {
 		return nil, err
@@ -73,13 +74,19 @@ func NormalizeURL(u string) string {
 		u = strings.Replace(u, "https://github.com", "https://raw.githubusercontent.com", 1)
 		u = strings.Replace(u, "/blob/", "/", 1)
 	}
+	if strings.HasPrefix(u, "https://gitlab.com") && len(urlArray) > 5 && urlArray[6] == "blob" && urlArray[5] != "blob" && urlArray[4] != "blob" && urlArray[3] != "blob" {
+		u = strings.Replace(u, "/blob/", "/raw/", 1)
+	}
+	if strings.HasPrefix(u, "https://bitbucket.org") && len(urlArray) > 4 && urlArray[5] == "src" {
+		u = strings.Replace(u, "/src/", "/raw/", 1)
+	}
 	return u
 }
 
-func (client *Client) GetExecutedURL(query models.Query) string {
+func (client *Client) GetExecutedURL(ctx context.Context, query models.Query) string {
 	out := []string{}
-	if query.Source != "inline" {
-		req, err := GetRequest(client.Settings, GetQueryBody(query), query, map[string]string{}, false)
+	if query.Source != "inline" && query.Source != "azure-blob" {
+		req, err := GetRequest(ctx, client.Settings, GetQueryBody(query), query, map[string]string{}, false)
 		if err != nil {
 			return fmt.Sprintf("error retrieving full url. %s", query.URL)
 		}
@@ -101,6 +108,9 @@ func (client *Client) GetExecutedURL(query models.Query) string {
 	}
 	if client.Settings.AuthenticationMethod == models.AuthenticationMethodAWS {
 		out = append(out, "###############", "> Authentication steps not included for AWS authentication")
+	}
+	if client.Settings.AuthenticationMethod == models.AuthenticationMethodAzureBlob {
+		out = append(out, "###############", "> Authentication steps not included for azure blob authentication")
 	}
 	return strings.Join(out, "\n")
 }

@@ -9,7 +9,7 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/gtime"
-	m "github.com/yesoreyeram/grafana-plugins/macros"
+	m "github.com/yesoreyeram/grafana-plugins/lib/go/macros"
 )
 
 type macroFunc func(string, []string) (string, error)
@@ -152,6 +152,20 @@ func ApplyMacros(ctx context.Context, query Query, timeRange backend.TimeRange, 
 		}
 		query.URLOptions.Params[idx].Value = up
 	}
+
+	for idx, cc := range query.ComputedColumns {
+		up, err := InterPolateMacros(cc.Selector, timeRange, pluginContext)
+		if err != nil {
+			return query, fmt.Errorf("error applying macros to computed column %s (alias: %s). %s", cc.Selector, cc.Text, err.Error())
+		}
+		query.ComputedColumns[idx].Selector = up
+	}
+
+	exp, err := InterPolateMacros(query.FilterExpression, timeRange, pluginContext)
+	if err != nil {
+		return query, fmt.Errorf("error applying macros to filter expression. %s", err.Error())
+	}
+	query.FilterExpression = exp
 
 	return query, nil
 }

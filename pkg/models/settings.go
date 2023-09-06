@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"golang.org/x/oauth2"
 )
 
 const (
@@ -20,6 +21,7 @@ const (
 	AuthenticationMethodOAuth        = "oauth2"
 	AuthenticationMethodAWS          = "aws"
 	AuthenticationMethodZCAP         = "zcap" //variable for authentication ZCap type
+	AuthenticationMethodAzureBlob    = "azureBlob"
 )
 
 const (
@@ -34,13 +36,14 @@ const (
 )
 
 type OAuth2Settings struct {
-	OAuth2Type     string   `json:"oauth2_type,omitempty"`
-	ClientID       string   `json:"client_id,omitempty"`
-	TokenURL       string   `json:"token_url,omitempty"`
-	Email          string   `json:"email,omitempty"`
-	PrivateKeyID   string   `json:"private_key_id,omitempty"`
-	Subject        string   `json:"subject,omitempty"`
-	Scopes         []string `json:"scopes,omitempty"`
+	OAuth2Type     string           `json:"oauth2_type,omitempty"`
+	ClientID       string           `json:"client_id,omitempty"`
+	TokenURL       string           `json:"token_url,omitempty"`
+	Email          string           `json:"email,omitempty"`
+	PrivateKeyID   string           `json:"private_key_id,omitempty"`
+	Subject        string           `json:"subject,omitempty"`
+	Scopes         []string         `json:"scopes,omitempty"`
+	AuthStyle      oauth2.AuthStyle `json:"authStyle,omitempty"`
 	ClientSecret   string
 	PrivateKey     string
 	EndpointParams map[string]string
@@ -59,6 +62,7 @@ type AWSSettings struct {
 }
 
 type InfinitySettings struct {
+	IsMock                   bool
 	AuthenticationMethod     string
 	OAuth2Settings           OAuth2Settings
 	BearerToken              string
@@ -92,6 +96,9 @@ type InfinitySettings struct {
 	ReferenceData            []RefData
 	CustomHealthCheckEnabled bool
 	CustomHealthCheckUrl     string
+	AzureBlobAccountUrl      string
+	AzureBlobAccountName     string
+	AzureBlobAccountKey      string
 }
 
 func (s *InfinitySettings) Validate() error {
@@ -103,6 +110,9 @@ func (s *InfinitySettings) Validate() error {
 	}
 	if s.AuthenticationMethod == AuthenticationMethodBearerToken && s.BearerToken == "" {
 		return errors.New("invalid or empty bearer token detected")
+	}
+	if s.AuthenticationMethod == AuthenticationMethodAzureBlob {
+		return nil
 	}
 	if s.AuthenticationMethod == AuthenticationMethodZCAP && (s.ZCapJsonPath == "" || !strings.HasPrefix(s.ZCapJsonPath, "https")) {
 		return errors.New("invalid or empty zcap request url")
@@ -138,6 +148,7 @@ type RefData struct {
 }
 
 type InfinitySettingsJson struct {
+	IsMock                   bool           `json:"is_mock,omitempty"`
 	AuthenticationMethod     string         `json:"auth_method,omitempty"`
 	APIKeyKey                string         `json:"apiKeyKey,omitempty"`
 	APIKeyType               string         `json:"apiKeyType,omitempty"`
@@ -158,6 +169,8 @@ type InfinitySettingsJson struct {
 	ReferenceData            []RefData      `json:"refData,omitempty"`
 	CustomHealthCheckEnabled bool           `json:"customHealthCheckEnabled,omitempty"`
 	CustomHealthCheckUrl     string         `json:"customHealthCheckUrl,omitempty"`
+	AzureBlobAccountUrl      string         `json:"azureBlobAccountUrl,omitempty"`
+	AzureBlobAccountName     string         `json:"azureBlobAccountName,omitempty"`
 }
 
 func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinitySettings, err error) {
@@ -172,6 +185,7 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 		if err := json.Unmarshal(config.JSONData, &infJson); err != nil {
 			return settings, err
 		}
+		settings.IsMock = infJson.IsMock
 		settings.AuthenticationMethod = infJson.AuthenticationMethod
 		settings.OAuth2Settings = infJson.OAuth2Settings
 		if settings.AuthenticationMethod == "oauth2" && settings.OAuth2Settings.OAuth2Type == "" {
@@ -207,6 +221,8 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 	settings.ReferenceData = infJson.ReferenceData
 	settings.CustomHealthCheckEnabled = infJson.CustomHealthCheckEnabled
 	settings.CustomHealthCheckUrl = infJson.CustomHealthCheckUrl
+	settings.AzureBlobAccountUrl = infJson.AzureBlobAccountUrl
+	settings.AzureBlobAccountName = infJson.AzureBlobAccountName
 	if val, ok := config.DecryptedSecureJSONData["basicAuthPassword"]; ok {
 		settings.Password = val
 	}
@@ -234,6 +250,9 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 	if val, ok := config.DecryptedSecureJSONData["awsSecretKey"]; ok {
 		settings.AWSSecretKey = val
 	}
+	if val, ok := config.DecryptedSecureJSONData["azureBlobAccountKey"]; ok {
+		settings.AzureBlobAccountKey = val
+	}
 	settings.CustomHeaders = GetSecrets(config, "httpHeaderName", "httpHeaderValue")
 	settings.SecureQueryFields = GetSecrets(config, "secureQueryName", "secureQueryValue")
 	settings.OAuth2Settings.EndpointParams = GetSecrets(config, "oauth2EndPointParamsName", "oauth2EndPointParamsValue")
@@ -245,6 +264,9 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 		if settings.ForwardOauthIdentity {
 			settings.AuthenticationMethod = AuthenticationMethodForwardOauth
 		}
+	}
+	if settings.AuthenticationMethod == AuthenticationMethodAzureBlob && settings.AzureBlobAccountUrl == "" {
+		settings.AzureBlobAccountUrl = "https://%s.blob.core.windows.net/"
 	}
 	return
 }

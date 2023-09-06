@@ -11,8 +11,8 @@ import { getTemplateVariablesFromResult, LegacyVariableProvider, migrateLegacyQu
 import { AnnotationsEditor } from './editors/annotation.editor';
 import { interpolateQuery, interpolateVariableQuery } from './interpolate';
 import { migrateQuery } from './migrate';
-import { isBackendQuery, isDataQuery, normalizeURL } from './app/utils';
-import { reportQuery } from './utils/analytics';
+import { isBackendQuery } from './app/utils';
+import { reportQuery, reportHealthCheck } from './utils/analytics';
 import type { InfinityInstanceSettings, InfinityOptions, InfinityQuery, MetricFindValue, VariableQuery } from './types';
 import type { DataFrame, DataQueryRequest, DataQueryResponse, ScopedVars, TimeRange } from '@grafana/data/types';
 
@@ -26,7 +26,7 @@ export class Datasource extends DataSourceWithBackend<InfinityQuery, InfinityOpt
   query(options: DataQueryRequest<InfinityQuery>): Observable<DataQueryResponse> {
     return new Observable<DataQueryResponse>((subscriber) => {
       let request = getUpdatedDataRequest(options, this.instanceSettings);
-      reportQuery(request?.targets || []);
+      reportQuery(request?.targets || [], this.instanceSettings, request?.app);
       super
         .query(request)
         .toPromise()
@@ -46,15 +46,6 @@ export class Datasource extends DataSourceWithBackend<InfinityQuery, InfinityOpt
   metricFindQuery(originalQuery: VariableQuery): Promise<MetricFindValue[]> {
     let query = migrateLegacyQuery(originalQuery);
     query = interpolateVariableQuery(query);
-    if (query.queryType === 'infinity' && isDataQuery(query.infinityQuery) && query.infinityQuery.source === 'url') {
-      query = {
-        ...query,
-        infinityQuery: {
-          ...query.infinityQuery,
-          url: normalizeURL(query.infinityQuery.url),
-        },
-      };
-    }
     return new Promise((resolve) => {
       switch (query.queryType) {
         case 'random':
@@ -110,12 +101,15 @@ export class Datasource extends DataSourceWithBackend<InfinityQuery, InfinityOpt
       .then((o) => {
         switch (o?.message) {
           case 'OK':
+            reportHealthCheck({ status: 'success', message: 'OK. Settings saved', authMethod: this.instanceSettings?.jsonData?.auth_method || '' });
             return Promise.resolve({ status: 'success', message: 'OK. Settings saved' });
           default:
+            reportHealthCheck({ status: o?.status || 'success', message: o?.message || 'Settings saved' });
             return Promise.resolve({ status: o?.status || 'success', message: o?.message || 'Settings saved' });
         }
       })
       .catch((ex) => {
+        reportHealthCheck({ status: 'error', message: ex.message });
         return Promise.resolve({ status: 'error', message: ex.message });
       });
   }
@@ -149,6 +143,8 @@ export class Datasource extends DataSourceWithBackend<InfinityQuery, InfinityOpt
           promises.push(Promise.resolve(d));
         } else if (target.type === 'google-sheets') {
           promises.push(Promise.resolve(d));
+        } else if (target.type === 'transformations') {
+          promises.push(Promise.resolve(d));
         } else if (target.type === 'json' && target.parser === 'sqlite') {
           promises.push(Promise.resolve(d));
         } else {
@@ -161,7 +157,27 @@ export class Datasource extends DataSourceWithBackend<InfinityQuery, InfinityOpt
                 target.format !== 'timeseries'
               ) {
                 const df = toDataFrame(r);
-                let frame = { ...df, meta: d.meta, refId: target.refId };
+                let frame = { ...df, meta: d.meta || {}, refId: target.refId };
+                if (target.format === 'logs') {
+                  let doesTimeFieldExist = false;
+                  let doesBodyFieldExist = false;
+                  (df.fields || []).forEach((f) => {
+                    if (f.name === 'timestamp' && f.type === 'time') {
+                      doesTimeFieldExist = true;
+                    }
+                    if (f.name === 'body' && f.type === 'string') {
+                      doesBodyFieldExist = true;
+                    }
+                  });
+                  if (doesBodyFieldExist && doesTimeFieldExist) {
+                    frame.meta.type = 'log-lines';
+                    frame.meta.typeVersion = [0, 0];
+                  }
+                  frame.meta.preferredVisualisationType = 'logs';
+                }
+                if (target.format === 'trace') {
+                  frame.meta.preferredVisualisationType = 'trace';
+                }
                 if (error || (responseCodeFromServer && responseCodeFromServer >= 400)) {
                   frame.meta.notices = [
                     {

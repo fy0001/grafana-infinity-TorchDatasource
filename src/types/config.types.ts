@@ -7,7 +7,7 @@ export interface GlobalInfinityQuery {
   id: string;
   query: InfinityQuery;
 }
-export type AuthType = 'none' | 'basicAuth' | 'apiKey' | 'bearerToken' | 'oauthPassThru' | 'digestAuth' | 'aws' | 'oauth2' | 'zcap';
+export type AuthType = 'none' | 'basicAuth' | 'apiKey' | 'bearerToken' | 'oauthPassThru' | 'digestAuth' | 'aws' | 'azureBlob' | 'oauth2' | 'zcap';
 export type OAuth2Type = 'client_credentials' | 'jwt' | 'others';
 export type APIKeyType = 'header' | 'query';
 export type OAuth2Props = {
@@ -18,6 +18,7 @@ export type OAuth2Props = {
   subject?: string;
   token_url?: string;
   scopes?: string[];
+  authStyle?: number;
 };
 export type AWSAuthProps = {
   authType?: 'keys';
@@ -47,6 +48,8 @@ export interface InfinityOptions extends DataSourceJsonData {
   openAPIBaseURL?: string;
   customHealthCheckEnabled?: boolean;
   customHealthCheckUrl?: string;
+  azureBlobAccountUrl?: string;
+  azureBlobAccountName?: string;
 }
 
 export interface InfinitySecureOptions {
@@ -60,6 +63,7 @@ export interface InfinitySecureOptions {
   awsSecretKey?: string;
   oauth2ClientSecret?: string;
   oauth2JWTPrivateKey?: string;
+  azureBlobAccountKey?: string;
 }
 export interface SecureField {
   id: string;

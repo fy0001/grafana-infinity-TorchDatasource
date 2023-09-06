@@ -1,8 +1,9 @@
+import { CoreApp } from '@grafana/data';
 import { reportInteraction, config } from '@grafana/runtime';
 import { isBackendQuery } from './../app/utils';
 import { InfinityInstanceSettings, InfinityQuery } from './../types';
 
-type Report_Action = 'grafana_infinity_query_executed';
+type Report_Action = 'grafana_infinity_query_executed' | 'grafana_infinity_health_check_executed';
 
 const reportActivity = (action: Report_Action, meta?: Record<string, any>) => {
   try {
@@ -12,7 +13,14 @@ const reportActivity = (action: Report_Action, meta?: Record<string, any>) => {
   }
 };
 
-export const reportQuery = (queries: InfinityQuery[] = [], instance_settings?: InfinityInstanceSettings) => {
+export const reportHealthCheck = (meta: Record<string, string> = {}) => {
+  reportActivity('grafana_infinity_health_check_executed', meta);
+};
+
+export const reportQuery = (queries: InfinityQuery[] = [], instance_settings?: InfinityInstanceSettings, app = 'unknown') => {
+  if (app === CoreApp.Dashboard || app === CoreApp.PanelViewer) {
+    return;
+  }
   let input: Record<string, number | string> = {};
   for (const query of queries) {
     input['grafana_buildInfo_edition'] = config?.buildInfo?.edition || '';

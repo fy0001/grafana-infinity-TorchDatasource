@@ -15,15 +15,18 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/mercury"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
 )
 
 type Client struct {
-	Settings   models.InfinitySettings
-	HttpClient *http.Client
-	IsMock     bool
+	Settings        models.InfinitySettings
+	HttpClient      *http.Client
+	AzureBlobClient *azblob.Client
+	IsMock          bool
 }
 
 func GetTLSConfigFromSettings(settings models.InfinitySettings) (*tls.Config, error) {
@@ -85,10 +88,35 @@ func NewClient(settings models.InfinitySettings) (client *Client, err error) {
 	httpClient = ApplyOAuthClientCredentials(httpClient, settings)
 	httpClient = ApplyOAuthJWT(httpClient, settings)
 	httpClient = ApplyAWSAuth(httpClient, settings)
-	return &Client{
+	client = &Client{
 		Settings:   settings,
 		HttpClient: httpClient,
-	}, err
+	}
+	if settings.AuthenticationMethod == models.AuthenticationMethodAzureBlob {
+		cred, err := azblob.NewSharedKeyCredential(settings.AzureBlobAccountName, settings.AzureBlobAccountKey)
+		if err != nil {
+			return nil, fmt.Errorf("invalid azure blob credentials. %s", err)
+		}
+		clientUrl := "https://%s.blob.core.windows.net/"
+		if settings.AzureBlobAccountUrl != "" {
+			clientUrl = settings.AzureBlobAccountUrl
+		}
+		if strings.Contains(clientUrl, "%s") {
+			clientUrl = fmt.Sprintf(clientUrl, settings.AzureBlobAccountName)
+		}
+		azClient, err := azblob.NewClientWithSharedKeyCredential(clientUrl, cred, nil)
+		if err != nil {
+			return nil, fmt.Errorf("invalid azure blob client. %s", err)
+		}
+		if azClient == nil {
+			return nil, errors.New("invalid/empty azure blob client")
+		}
+		client.AzureBlobClient = azClient
+	}
+	if settings.IsMock {
+		client.IsMock = true
+	}
+	return client, err
 }
 
 func replaceSect(input string, settings models.InfinitySettings, includeSect bool) string {
@@ -134,13 +162,16 @@ func ApplyZCapAuth(settings models.InfinitySettings) (string, string, error) {
 }
 
 func (client *Client) req(ctx context.Context, url string, body io.Reader, settings models.InfinitySettings, query models.Query, requestHeaders map[string]string) (obj any, statusCode int, duration time.Duration, err error) {
+	ctx, span := tracing.DefaultTracer().Start(ctx, "client.req")
+	defer span.End()
 
-	req, _ := GetRequest(settings, body, query, requestHeaders, true)
+	req, _ := GetRequest(ctx, settings, body, query, requestHeaders, true)
 	startTime := time.Now()
 	if !CanAllowURL(req.URL.String(), settings.AllowedHosts) {
 		backend.Logger.Error("url is not in the allowed list. make sure to match the base URL with the settings", "url", req.URL.String())
 		return nil, http.StatusUnauthorized, 0, errors.New("requested URL is not allowed. To allow this URL, update the datasource config Security -> Allowed Hosts section")
 	}
+	backend.Logger.Debug("yesoreyeram-infinity-datasource plugin is now requesting URL", "url", req.URL.String())
 
 	res, err := client.HttpClient.Do(req)
 
@@ -209,6 +240,33 @@ func removeBOMContent(input []byte) []byte {
 }
 
 func (client *Client) GetResults(ctx context.Context, query models.Query, requestHeaders map[string]string) (o any, statusCode int, duration time.Duration, err error) {
+	if query.Source == "azure-blob" {
+		if strings.TrimSpace(query.AzBlobContainerName) == "" || strings.TrimSpace(query.AzBlobName) == "" {
+			return nil, http.StatusBadRequest, 0, errors.New("invalid/empty container name/blob name")
+		}
+		if client.AzureBlobClient == nil {
+			return nil, http.StatusInternalServerError, 0, errors.New("invalid azure blob client")
+		}
+		blobDownloadResponse, err := client.AzureBlobClient.DownloadStream(ctx, strings.TrimSpace(query.AzBlobContainerName), strings.TrimSpace(query.AzBlobName), nil)
+		if err != nil {
+			return nil, http.StatusInternalServerError, 0, err
+		}
+		reader := blobDownloadResponse.Body
+		bodyBytes, err := io.ReadAll(reader)
+		if err != nil {
+			return nil, http.StatusInternalServerError, 0, fmt.Errorf("error reading blob content. %w", err)
+		}
+		bodyBytes = removeBOMContent(bodyBytes)
+		if CanParseAsJSON(query.Type, http.Header{}) {
+			var out any
+			err := json.Unmarshal(bodyBytes, &out)
+			if err != nil {
+				backend.Logger.Error("error un-marshaling blob content", "error", err.Error())
+			}
+			return out, http.StatusOK, duration, err
+		}
+		return string(bodyBytes), http.StatusOK, 0, nil
+	}
 	switch strings.ToUpper(query.URLOptions.Method) {
 	case http.MethodPost:
 		body := GetQueryBody(query)

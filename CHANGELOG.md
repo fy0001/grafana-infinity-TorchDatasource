@@ -1,19 +1,62 @@
 # Change Log
 
-## 1.5.0
+## 2.1.0
 
-### Minor Changes
+🚀 **OAuth2**: Added ability to set auth style in client credentials
 
-- **Config editor** Updated config editor UI
-- **Health Check** Added support for custom health check
-- **Chore** Backend binaries are now compiled with Go 1.20.4 which contains **security patches**
+🚀 **Azure blob storage**: Support for reading content from Azure Blog Storage
 
-### Patch Changes
+🚀 **Logs**: Added support for visualizing data in `logs` format
 
-- **Logging** Consuming `reportInteraction` from the **@grafana/runtime** library for reporting queries
-- **Logging** Updated backend logging for improved debugging experience
-- **Chore** Added changeset to the build/publish pipeline
-- **docs**: updated docs about user agent header
+🚀 **Trace**: Added support for visualizing data in `trace` format
+
+🚀 **Macros**: Added support for macros in computed columns and filter expression when used with backend parser
+
+🚀 **URL**: Support for gitlab blob to raw URL conversion added
+
+🚀 **URL**: Support for bitbucket blob to raw URL conversion added
+
+🚀 **Parser**: Added support for explicit boolean parsing in default and backend parsers
+
+🚀 **Config Editor**: Preview / Sample request added to some authentication types
+
+🛡️ **Security**: Backend binaries are compiled with golang 1.21.0 which also contains [security fixes](https://groups.google.com/g/golang-announce/c/2q13H6LEEx0) from previous versions
+
+🐛 **UI**: Fixed a bug in query editor where buttons were rendered incorrectly
+
+🐛 **URL normalization**: Fixed a bug where some github URLs were interpolated incorrectly. Fixes [#604](https://github.com/yesoreyeram/grafana-infinity-datasource/issues/604)
+
+🐛 **Test**: Fixed a bug in tests
+
+🐛 **Docs**: Removed `Cmd/Ctrl+F` key binding in the docs website in favour of native browser search
+
+⚙️ **Chore**: Grafana plugin SDK `grafana/grafana-plugin-sdk-go` updated to `v0.174.0` from `v0.166.0`
+
+⚙️ **Chore**: Updated backend packages
+
+⚙️ **Test** More test data/examples added
+
+## 2.0.0
+
+🎉 **Pagination**: Added pagination support for json type queries ( backend parser ). Refer [this github discussion](https://github.com/yesoreyeram/grafana-infinity-datasource/discussions/601) for more details
+
+🎉 **Transformation**: Added support for server side transformations via transformations query type. This version supports transformations such as `limit`, `filterExpression`, `computedColumn` and `summarize`. Refer [this github discussion](https://github.com/yesoreyeram/grafana-infinity-datasource/discussions/614) for more details
+
+🚀 **Health Check**: Added support for custom health check
+
+🚀 **Config editor**: Updated config editor UI
+
+🐛 **Logging**: Updated backend logging for improved debugging experience
+
+🐛 **docs**: updated docs about user agent header
+
+🐛 **Logging**: Consuming `reportInteraction` from the `@grafana/runtime` library for reporting queries
+
+⚙️ **Chore**: Added changeset to the build/publish pipeline
+
+⚙️ **Chore**: update grafana backend plugin SDK from v0.159.0 to v0.162.0
+
+⚙️ **Chore**: Backend binaries are now compiled with Go 1.20.4 which contains **security patches**
 
 ## [ 1.4.1 ]
 

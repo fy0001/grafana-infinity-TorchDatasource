@@ -1,6 +1,7 @@
 package infinity_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -219,7 +220,7 @@ func TestClient_GetExecutedURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := &infinity.Client{Settings: tt.settings}
-			got := client.GetExecutedURL(tt.query)
+			got := client.GetExecutedURL(context.TODO(), tt.query)
 			assert.Equal(t, fmt.Sprintf("###############\n## URL\n###############\n\n%s\n\n###############\n## Curl Command\n###############\n\n%s", tt.url, tt.command), got)
 		})
 	}
@@ -235,6 +236,8 @@ func TestNormalizeURL(t *testing.T) {
 		{u: "https://github.com/yesoreyeram/grafana-infinity-datasource/blob/main/testdata/blob/users.csv", want: "https://raw.githubusercontent.com/yesoreyeram/grafana-infinity-datasource/main/testdata/blob/users.csv"},
 		{u: "https://raw.githubusercontent.com/yesoreyeram/grafana-infinity-datasource/main/testdata/users.csv", want: "https://raw.githubusercontent.com/yesoreyeram/grafana-infinity-datasource/main/testdata/users.csv"},
 		{u: "https://foo.com/channels/38629/feed.json", want: "https://foo.com/channels/38629/feed.json"},
+		{u: "https://gitlab.com/restcountries/restcountries/-/blob/master/src/main/resources/countriesV3.json", want: "https://gitlab.com/restcountries/restcountries/-/raw/master/src/main/resources/countriesV3.json"},
+		{u: "https://bitbucket.org/yesoreyeram/test_repo/src/master/data/countries.json", want: "https://bitbucket.org/yesoreyeram/test_repo/raw/master/data/countries.json"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

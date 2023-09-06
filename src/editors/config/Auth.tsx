@@ -19,6 +19,7 @@ const authTypes: Array<SelectableValue<AuthType | 'others'> & { logo?: string }>
   { value: 'oauth2', label: 'OAuth2', logo: '/public/plugins/yesoreyeram-infinity-datasource/img/oauth-2-sm.png' },
   { value: 'aws', label: 'AWS', logo: '/public/plugins/yesoreyeram-infinity-datasource/img/aws.jpg' },
   { value: 'zcap', label: 'ZCAP' },
+  { value: 'azureBlob', label: 'Azure Blob' },
   { value: 'others', label: 'Other Auth Providers' },
 ];
 
@@ -78,6 +79,7 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
       case 'bearerToken':
       case 'zcap':
       case 'aws':
+      case 'azureBlob':
       case 'oauth2':
       case 'none':
       default:
@@ -98,6 +100,9 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
   };
   const onAwsServiceChange = (service: string) => {
     onOptionsChange({ ...options, jsonData: { ...options.jsonData, aws: { ...options.jsonData?.aws, service } } });
+  };
+  const onAzureBlogAccountChange = (azureBlobAccountName: string) => {
+    onOptionsChange({ ...options, jsonData: { ...options.jsonData, azureBlobAccountName } });
   };
   const onResetSecret = (key: keyof InfinitySecureOptions) => {
     onOptionsChange({
@@ -201,6 +206,7 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
                     tooltip="bearer token"
                   />
                 </div>
+                <ConfigPreview jsonData={options.jsonData} authType={authType} />
               </>
             )}
             {authType === 'apiKey' && (
@@ -241,6 +247,7 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
                     onChange={(apiKeyType = 'header') => onOptionsChange({ ...options, jsonData: { ...options.jsonData, apiKeyType } })}
                   />
                 </div>
+                <ConfigPreview jsonData={options.jsonData} authType={authType} />
               </>
             )}
             {authType === 'aws' && (
@@ -291,10 +298,39 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
               </>
             )}
             {authType === 'oauth2' && <OAuthInputsEditor {...props} />}
+            {authType === 'azureBlob' && (
+              <>
+                <div className="gf-form">
+                  <FormField
+                    label="Storage account name"
+                    placeholder="storage account name"
+                    tooltip={'storage account name'}
+                    labelWidth={12}
+                    value={props.options.jsonData?.azureBlobAccountName || ''}
+                    onChange={(e) => onAzureBlogAccountChange(e.currentTarget.value)}
+                  ></FormField>
+                </div>
+                <div className="gf-form">
+                  <SecretFormField
+                    labelWidth={12}
+                    inputWidth={12}
+                    required
+                    value={secureJsonData.azureBlobAccountKey || ''}
+                    isConfigured={(secureJsonFields && secureJsonFields.azureBlobAccountKey) as boolean}
+                    onReset={() => onResetSecret('azureBlobAccountKey')}
+                    onChange={onUpdateDatasourceSecureJsonDataOption(props, 'azureBlobAccountKey')}
+                    label="Storage account key"
+                    aria-label="azure blob storage account key"
+                    placeholder="azure blob storage account key"
+                    tooltip="azure blob storage account key"
+                  />
+                </div>
+              </>
+            )}
           </div>
         </>
       )}
-      { (authType !== 'none' && authType !== 'zcap') && !othersOpen && (
+      { (authType !== 'none' && authType !== 'zcap') && authType !== 'azureBlob' && !othersOpen && (
         <>
           <h5 className={styles.subheading}>Allowed hosts</h5>
           <AllowedHostsEditor options={options} onOptionsChange={onOptionsChange} />
@@ -304,4 +340,45 @@ export const AuthEditor = (props: DataSourcePluginOptionsEditorProps<InfinityOpt
       
     </>
   );
+};
+
+const ConfigPreview = (props: { jsonData: InfinityOptions; authType: string }) => {
+  const { jsonData, authType } = props;
+  return (
+    <>
+      <br />
+      <h5>Preview / Sample request</h5>
+      <br />
+      <code>{configToCurl(jsonData, authType)}</code>
+    </>
+  );
+};
+
+const configToCurl = (jsonData: InfinityOptions, authType = 'unknown') => {
+  const headerKeys = Object.keys(jsonData || {})
+    .filter((key) => key.startsWith('httpHeaderName'))
+    .filter(Boolean)
+    .map((k) => (jsonData as any)[k])
+    .filter(Boolean)
+    .map((k) => `--header '${k || 'header_key'}: xxx'`)
+    .join(` `);
+  const queryKeys = Object.keys(jsonData || {})
+    .filter((key) => key.startsWith('secureQueryName'))
+    .filter(Boolean)
+    .map((k) => (jsonData as any)[k])
+    .filter(Boolean)
+    .map((k) => `${k || 'header_key'}=xxx`)
+    .join(`&`);
+  if (authType === 'basicAuth' || authType === 'digestAuth') {
+    return `curl --location 'https://your_url.com?${queryKeys}' --header 'Authorization: Basic <YOUR_USERNAME_PASSWORD_ENCODED>' ${headerKeys}`;
+  } else if (authType === 'bearerToken') {
+    return `curl --location 'https://your_url.com?${queryKeys}' --header 'Authorization: Bearer <YOUR_TOKEN_GOES_HERE>' ${headerKeys}`;
+  } else if (authType === 'apiKey') {
+    if (jsonData.apiKeyType === 'query') {
+      return `curl --location 'https://your_url.com?${jsonData.apiKeyKey}=<YOUR_API_KEY_VALUED>&${queryKeys}' ${headerKeys}`;
+    } else {
+      return `curl --location 'https://your_url.com?${queryKeys}' --header '${jsonData.apiKeyKey || '<YOUR_API_KEY>'}: <YOUR_API_VALUE>' ${headerKeys}`;
+    }
+  }
+  return '';
 };
