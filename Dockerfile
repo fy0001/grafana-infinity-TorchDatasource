@@ -14,15 +14,15 @@ COPY ./src/plugin.json ./src/
 RUN go mod download
 RUN mage -v
 
-FROM node:18 as frontend
+FROM node:16 as frontend
 WORKDIR /app/grafana-infinity-datasource/frontend
 COPY README.md ./
 COPY CHANGELOG.md ./
 COPY LICENSE ./
-COPY package.json ./
-#CMD npm install --global @mercury/client-adapter
-RUN  npm install --global @mercury/client-adapter
+ADD test.txt ./
 COPY .npmrc ./
+COPY package.json ./
+RUN npm install --global @mercury/client-adapter 
 COPY yarn.lock ./
 COPY tsconfig.json ./
 COPY jest.config.js ./
@@ -32,6 +32,8 @@ COPY cspell.config.json ./
 COPY src/ ./src/
 RUN yarn install --frozen-lockfile
 RUN yarn dev
+
+
 
 FROM grafana/grafana-enterprise:main
 WORKDIR /var/lib/grafana/plugins/yesoreyeram-infinity-datasource
