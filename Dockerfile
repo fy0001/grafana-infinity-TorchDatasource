@@ -19,10 +19,9 @@ WORKDIR /app/grafana-infinity-datasource/frontend
 COPY README.md ./
 COPY CHANGELOG.md ./
 COPY LICENSE ./
-ADD test.txt ./
 COPY .npmrc ./
 COPY package.json ./
-RUN npm install --global @mercury/client-adapter 
+RUN npm install @mercury/client-adapter 
 COPY yarn.lock ./
 COPY tsconfig.json ./
 COPY jest.config.js ./
