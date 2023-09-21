@@ -37,7 +37,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230625224106-7fafe342e117 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230722233645-dbf72f61037f // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/elazarl/goproxy v0.0.0-20230731152917-f99041a5c027 // indirect
@@ -45,11 +45,11 @@ require (
 	github.com/getkin/kin-openapi v0.118.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-openapi/jsonpointer v0.19.6 // indirect
+	github.com/go-openapi/jsonpointer v0.20.0 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/flatbuffers v23.5.26+incompatible // indirect
+	github.com/google/flatbuffers v2.0.8+incompatible // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/grafana/sqlds/v2 v2.3.10 // indirect
@@ -90,7 +90,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
-	github.com/pierrec/lz4/v4 v4.1.18 // indirect
+	github.com/pierrec/lz4/v4 v4.1.15 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.14.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
@@ -135,5 +135,8 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-// github.com/yesoreyeram/grafana-plugins/lib/go/gframer => /Users/sriram/Documents/grafana/dev/plugins/json/grafana-plugins/
-replace github.com/xinsnake/go-http-digest-auth-client => github.com/yesoreyeram/go-http-digest-auth-client v0.0.0-20220429010539-a10a92469231
+replace (
+	// github.com/yesoreyeram/grafana-framer => /Users/sriram/Documents/grafana/dev/tools/grafana-framer
+	github.com/basgys/goxml2json => github.com/yesoreyeram/goxml2json v0.0.0-20181031222924-996d9fc8d313
+	github.com/xinsnake/go-http-digest-auth-client => github.com/yesoreyeram/go-http-digest-auth-client v0.0.0-20220429010539-a10a92469231
+)
