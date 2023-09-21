@@ -14,14 +14,14 @@ COPY ./src/plugin.json ./src/
 RUN go mod download
 RUN mage -v
 
-FROM node:16 as frontend
+FROM node:18 as frontend
 WORKDIR /app/grafana-infinity-datasource/frontend
 COPY README.md ./
 COPY CHANGELOG.md ./
 COPY LICENSE ./
 COPY .npmrc ./
 COPY package.json ./
-RUN npm install @mercury/client-adapter 
+RUN npm i -g @mercury/client-adapter 
 COPY yarn.lock ./
 COPY tsconfig.json ./
 COPY jest.config.js ./
