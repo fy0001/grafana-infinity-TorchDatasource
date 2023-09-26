@@ -1,4 +1,4 @@
-import { LoadingState, toDataFrame } from '@grafana/data';
+import { LoadingState, toDataFrame, DataFrame, DataQueryRequest, DataQueryResponse, ScopedVars, TimeRange } from '@grafana/data';
 import { DataSourceWithBackend } from '@grafana/runtime';
 import { flatten, sample } from 'lodash';
 import { Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { migrateQuery } from './migrate';
 import { isBackendQuery } from './app/utils';
 import { reportQuery, reportHealthCheck } from './utils/analytics';
 import type { InfinityInstanceSettings, InfinityOptions, InfinityQuery, MetricFindValue, VariableQuery } from './types';
-import type { DataFrame, DataQueryRequest, DataQueryResponse, ScopedVars, TimeRange } from '@grafana/data/types';
+
 
 export class Datasource extends DataSourceWithBackend<InfinityQuery, InfinityOptions> {
   constructor(public instanceSettings: InfinityInstanceSettings) {

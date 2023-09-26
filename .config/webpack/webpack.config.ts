@@ -18,7 +18,7 @@ import { SOURCE_DIR, DIST_DIR } from './constants';
 
 const pluginJson = getPluginJson();
 
-const config = async (env): Promise<Configuration> => {
+const config = async (env): Promise<Configuration> => { 
   const baseConfig: Configuration = {
     cache: {
       type: 'filesystem',
