@@ -20,8 +20,14 @@ const config = async (env): Promise<Configuration> => {
         path: require.resolve('path-browserify'),
         stream: require.resolve('stream-browserify'),
         util: require.resolve('util'),
-        timers: require.resolve("timers-browserify")
+        timers: require.resolve("timers-browserify"),
+        buffer: require.resolve("buffer")
       },
+    },
+    performance: {
+      hints: false,
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000
     },
   };
 
