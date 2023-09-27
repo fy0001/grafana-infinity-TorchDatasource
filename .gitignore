@@ -31,5 +31,4 @@ website/next-env.d.ts
 work/
 yarn-debug.log*
 yarn-error.log*
-npmrc
 .npmrc
