@@ -179,7 +179,7 @@ func (client *Client) req(ctx context.Context, url string, body io.Reader, setti
 	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
 		console, data, err := ApplyZCapAuth(settings)
 
-		backend.Logger.Info("entered in zcap", console) //displays in powershell log when running
+		backend.Logger.Info("entered in ZCAP", console) //displays in powershell log when running
 		res.StatusCode = 200
 		duration = time.Since(startTime)
 
