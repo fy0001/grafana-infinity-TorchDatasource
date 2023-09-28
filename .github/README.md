@@ -27,7 +27,9 @@
 
 ## 👍 Contributing ONLY 
 
-you can contribute in one of the following ways
+This is a forked REPOSITORY. It is not signed or published publicly. 
+The only way to see changes are following the contributing guide.
+- Git Clone this repository and make the necessary commands within the plugin directory to build and run.
 
 - If you find any interesting APIs, [showcase](https://github.com/yesoreyeram/grafana-infinity-datasource/discussions/categories/show-and-tell) how you are using the API with Infinity datasource so that other community members will get benefit out of it.
 - [Test different APIs](https://github.com/yesoreyeram/grafana-infinity-datasource/discussions/categories/specific-apis) and create bugs if not working as expected
