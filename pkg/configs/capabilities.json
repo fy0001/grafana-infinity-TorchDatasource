@@ -1,161 +1,235 @@
 {
-    "did": "did:key:z6Mknf12HNMZgvnChciB6DefEGGHWEFN9q7n7bHVnrdKxWwE",
-    "capabilities": {
-        "http": [],
-        "edv": [
-            {
-                "invocationTarget": "https://artemis.secure-ld.us/edvs/z1AEBxEBSdzpFJYbSfSEpGJom/documents",
-                "capabilities": {
-                    "documentCapability": {
+  "did": "did:key:z6Mkg8W1pnNpT5k2fJRsWrEcjokx5Bz9hWm4yQfNty5VyJBL",
+  "capabilities": {
+    "http": [
+    ],
+    "edv": [
+      {
+        "invocationTarget": "https://artemis.secure-ld.us/edvs/z19vA2WMxAFzKE4weVKs5Mftd/documents",
+        "capabilities": {
+          "documentCapability": {
+            "@context": [
+              "https://w3id.org/zcap/v1",
+              "https://w3id.org/security/suites/ed25519-2020/v1"
+            ],
+            "id": "urn:uuid:e3e02fa6-a83b-4de3-aa9c-b5694dc52bee",
+            "controller": "did:key:z6Mkg8W1pnNpT5k2fJRsWrEcjokx5Bz9hWm4yQfNty5VyJBL",
+            "parentCapability": "urn:uuid:e268fe12-8462-40a0-9a23-97a3852f2cbb",
+            "invocationTarget": "https://artemis.secure-ld.us/edvs/z19vA2WMxAFzKE4weVKs5Mftd/documents",
+            "expires": "2024-01-08T15:01:18Z",
+            "allowedAction": [
+              "read"
+            ],
+            "proof": {
+              "type": "Ed25519Signature2020",
+              "created": "2023-10-10T15:01:18Z",
+              "verificationMethod": "did:key:z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3#z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3",
+              "proofPurpose": "capabilityDelegation",
+              "capabilityChain": [
+                "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz19vA2WMxAFzKE4weVKs5Mftd",
+                "urn:uuid:a877d8d4-bcfb-4c5f-8ef9-6033a0feb558",
+                {
+                  "@context": [
+                    "https://w3id.org/zcap/v1",
+                    "https://w3id.org/security/suites/ed25519-2020/v1"
+                  ],
+                  "id": "urn:uuid:e268fe12-8462-40a0-9a23-97a3852f2cbb",
+                  "controller": "did:key:z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3",
+                  "parentCapability": "urn:uuid:a877d8d4-bcfb-4c5f-8ef9-6033a0feb558",
+                  "invocationTarget": "https://artemis.secure-ld.us/edvs/z19vA2WMxAFzKE4weVKs5Mftd/documents",
+                  "expires": "2024-10-09T14:28:37.000Z",
+                  "allowedAction": [
+                    "read",
+                    "write"
+                  ],
+                  "proof": {
+                    "type": "Ed25519Signature2020",
+                    "created": "2023-10-10T14:31:40Z",
+                    "verificationMethod": "did:key:z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS#z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS",
+                    "proofPurpose": "capabilityDelegation",
+                    "capabilityChain": [
+                      "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz19vA2WMxAFzKE4weVKs5Mftd",
+                      {
                         "@context": [
-                            "https://w3id.org/zcap/v1",
-                            "https://w3id.org/security/suites/ed25519-2020/v1"
+                          "https://w3id.org/zcap/v1",
+                          "https://w3id.org/security/suites/ed25519-2020/v1"
                         ],
-                        "id": "urn:uuid:6f4e0c57-a3dd-4ea9-88ba-7fe09e4509b4",
-                        "controller": "did:key:z6Mknf12HNMZgvnChciB6DefEGGHWEFN9q7n7bHVnrdKxWwE",
-                        "parentCapability": "urn:uuid:abf95a05-825d-4bbd-ba6b-955afa5bb4a3",
-                        "invocationTarget": "https://artemis.secure-ld.us/edvs/z1AEBxEBSdzpFJYbSfSEpGJom/documents",
-                        "expires": "2023-10-04T15:16:41Z",
+                        "id": "urn:uuid:a877d8d4-bcfb-4c5f-8ef9-6033a0feb558",
+                        "controller": "did:key:z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS",
+                        "parentCapability": "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz19vA2WMxAFzKE4weVKs5Mftd",
+                        "invocationTarget": "https://artemis.secure-ld.us/edvs/z19vA2WMxAFzKE4weVKs5Mftd/documents",
+                        "expires": "2024-10-09T14:28:37Z",
                         "allowedAction": [
-                            "read"
+                          "read",
+                          "write"
                         ],
                         "proof": {
-                            "type": "Ed25519Signature2020",
-                            "created": "2023-07-06T15:16:41Z",
-                            "verificationMethod": "did:key:z6MkwXnnpF5VJs4iFm2dgpPHyfVP7bkBY7RcTkpCrevSsDhD#z6MkwXnnpF5VJs4iFm2dgpPHyfVP7bkBY7RcTkpCrevSsDhD",
-                            "proofPurpose": "capabilityDelegation",
-                            "capabilityChain": [
-                                "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz1AEBxEBSdzpFJYbSfSEpGJom",
-                                "urn:uuid:dc8e1e06-8391-4afc-b2bc-d2ae8fa64abe",
-                                {
-                                    "@context": [
-                                        "https://w3id.org/zcap/v1",
-                                        "https://w3id.org/security/suites/ed25519-2020/v1"
-                                    ],
-                                    "id": "urn:uuid:abf95a05-825d-4bbd-ba6b-955afa5bb4a3",
-                                    "controller": "did:key:z6MkwXnnpF5VJs4iFm2dgpPHyfVP7bkBY7RcTkpCrevSsDhD",
-                                    "parentCapability": "urn:uuid:dc8e1e06-8391-4afc-b2bc-d2ae8fa64abe",
-                                    "invocationTarget": "https://artemis.secure-ld.us/edvs/z1AEBxEBSdzpFJYbSfSEpGJom/documents",
-                                    "expires": "2024-07-05T14:39:27.000Z",
-                                    "allowedAction": [
-                                        "read",
-                                        "write"
-                                    ],
-                                    "proof": {
-                                        "type": "Ed25519Signature2020",
-                                        "created": "2023-07-06T14:57:04Z",
-                                        "verificationMethod": "did:key:z6Mkgezq7GJGQ939MHU96ua8QzPbA2WyZZLLGfLH3kND7NoD#z6Mkgezq7GJGQ939MHU96ua8QzPbA2WyZZLLGfLH3kND7NoD",
-                                        "proofPurpose": "capabilityDelegation",
-                                        "capabilityChain": [
-                                            "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz1AEBxEBSdzpFJYbSfSEpGJom",
-                                            {
-                                                "@context": [
-                                                    "https://w3id.org/zcap/v1",
-                                                    "https://w3id.org/security/suites/ed25519-2020/v1"
-                                                ],
-                                                "id": "urn:uuid:dc8e1e06-8391-4afc-b2bc-d2ae8fa64abe",
-                                                "controller": "did:key:z6Mkgezq7GJGQ939MHU96ua8QzPbA2WyZZLLGfLH3kND7NoD",
-                                                "parentCapability": "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz1AEBxEBSdzpFJYbSfSEpGJom",
-                                                "invocationTarget": "https://artemis.secure-ld.us/edvs/z1AEBxEBSdzpFJYbSfSEpGJom/documents",
-                                                "expires": "2024-07-05T14:39:27Z",
-                                                "allowedAction": [
-                                                    "read",
-                                                    "write"
-                                                ],
-                                                "proof": {
-                                                    "type": "Ed25519Signature2020",
-                                                    "created": "2023-07-06T14:39:27Z",
-                                                    "verificationMethod": "did:key:z6MkwXa9tbGqAYFctzLVvZz2i8ccjLdJ5EPesADnZMy2VokW#z6MkwXa9tbGqAYFctzLVvZz2i8ccjLdJ5EPesADnZMy2VokW",
-                                                    "proofPurpose": "capabilityDelegation",
-                                                    "capabilityChain": [
-                                                        "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz1AEBxEBSdzpFJYbSfSEpGJom"
-                                                    ],
-                                                    "proofValue": "z2YT1exvePoEvRSFcc3TEtsrG4ba8bFzL3keEhb55fYbC6rYNRAqqhgKVz4rNMpJwNte1TuPpHnHtTfMYHgbY8qB3"
-                                                }
-                                            }
-                                        ],
-                                        "proofValue": "z2o4Fj4NnTtkt9SYWyYkMQqfCKBGhMNQB5Wvrr2HQ4PGVi51EKXvDwxzV6cuoKttPvXHX66KiUegMaAG7RpKop1Hm"
-                                    }
-                                }
-                            ],
-                            "proofValue": "zWrZjwGcLziMz4aMN6ZKiChi1EgV71Wsm15ftUbfLYDXjvMnpz7mbJufkr5Rq5of5cYsCQUQpKeitQS2GiL4ahwu"
+                          "type": "Ed25519Signature2020",
+                          "created": "2023-10-10T14:28:37Z",
+                          "verificationMethod": "did:key:z6MkkTRV6NyAtHTuAV4fpFHE8qM1n8fWDNotNR6XjmQfDwhi#z6MkkTRV6NyAtHTuAV4fpFHE8qM1n8fWDNotNR6XjmQfDwhi",
+                          "proofPurpose": "capabilityDelegation",
+                          "capabilityChain": [
+                            "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fedvs%2Fz19vA2WMxAFzKE4weVKs5Mftd"
+                          ],
+                          "proofValue": "z5z4XuCsYmmnDzPQGcu8kvXiszryR1uZz1DWJu5KetMa2ZnqdNwZriFDbX86CpEQVF2bE2kRVb8hHpWXR4KC45UCJ"
                         }
-                    },
-                    "kakCapability": {
-                        "@context": [
-                            "https://w3id.org/zcap/v1",
-                            "https://w3id.org/security/suites/ed25519-2020/v1"
-                        ],
-                        "id": "urn:uuid:fe544a30-40bb-4f6a-9626-efc66fa5bc59",
-                        "controller": "did:key:z6Mknf12HNMZgvnChciB6DefEGGHWEFN9q7n7bHVnrdKxWwE",
-                        "parentCapability": "urn:uuid:675f9f90-2696-44b2-be43-ef64f4c44446",
-                        "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z1A2FHxAHUMQwF1QQJPS3vLu8/keys/z19rYN4PTbPyoj7oCaP25KoPY",
-                        "expires": "2023-10-04T15:16:41Z",
-                        "allowedAction": [
-                            "deriveSecret"
-                        ],
-                        "proof": {
-                            "type": "Ed25519Signature2020",
-                            "created": "2023-07-06T15:16:41Z",
-                            "verificationMethod": "did:key:z6MkwXnnpF5VJs4iFm2dgpPHyfVP7bkBY7RcTkpCrevSsDhD#z6MkwXnnpF5VJs4iFm2dgpPHyfVP7bkBY7RcTkpCrevSsDhD",
-                            "proofPurpose": "capabilityDelegation",
-                            "capabilityChain": [
-                                "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz1A2FHxAHUMQwF1QQJPS3vLu8",
-                                "urn:uuid:b579c986-35b2-4b75-82f6-ba795cab7ac5",
-                                {
-                                    "@context": [
-                                        "https://w3id.org/zcap/v1",
-                                        "https://w3id.org/security/suites/ed25519-2020/v1"
-                                    ],
-                                    "id": "urn:uuid:675f9f90-2696-44b2-be43-ef64f4c44446",
-                                    "controller": "did:key:z6MkwXnnpF5VJs4iFm2dgpPHyfVP7bkBY7RcTkpCrevSsDhD",
-                                    "parentCapability": "urn:uuid:b579c986-35b2-4b75-82f6-ba795cab7ac5",
-                                    "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z1A2FHxAHUMQwF1QQJPS3vLu8/keys/z19rYN4PTbPyoj7oCaP25KoPY",
-                                    "expires": "2024-07-05T14:39:27.000Z",
-                                    "allowedAction": [
-                                        "deriveSecret"
-                                    ],
-                                    "proof": {
-                                        "type": "Ed25519Signature2020",
-                                        "created": "2023-07-06T14:57:04Z",
-                                        "verificationMethod": "did:key:z6Mkgezq7GJGQ939MHU96ua8QzPbA2WyZZLLGfLH3kND7NoD#z6Mkgezq7GJGQ939MHU96ua8QzPbA2WyZZLLGfLH3kND7NoD",
-                                        "proofPurpose": "capabilityDelegation",
-                                        "capabilityChain": [
-                                            "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz1A2FHxAHUMQwF1QQJPS3vLu8",
-                                            {
-                                                "@context": [
-                                                    "https://w3id.org/zcap/v1",
-                                                    "https://w3id.org/security/suites/ed25519-2020/v1"
-                                                ],
-                                                "id": "urn:uuid:b579c986-35b2-4b75-82f6-ba795cab7ac5",
-                                                "controller": "did:key:z6Mkgezq7GJGQ939MHU96ua8QzPbA2WyZZLLGfLH3kND7NoD",
-                                                "parentCapability": "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz1A2FHxAHUMQwF1QQJPS3vLu8",
-                                                "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z1A2FHxAHUMQwF1QQJPS3vLu8/keys/z19rYN4PTbPyoj7oCaP25KoPY",
-                                                "expires": "2024-07-05T14:39:27Z",
-                                                "allowedAction": [
-                                                    "deriveSecret"
-                                                ],
-                                                "proof": {
-                                                    "type": "Ed25519Signature2020",
-                                                    "created": "2023-07-06T14:39:27Z",
-                                                    "verificationMethod": "did:key:z6MkwXa9tbGqAYFctzLVvZz2i8ccjLdJ5EPesADnZMy2VokW#z6MkwXa9tbGqAYFctzLVvZz2i8ccjLdJ5EPesADnZMy2VokW",
-                                                    "proofPurpose": "capabilityDelegation",
-                                                    "capabilityChain": [
-                                                        "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz1A2FHxAHUMQwF1QQJPS3vLu8"
-                                                    ],
-                                                    "proofValue": "zQSSeWC287G6DycjyRAcJkMh5prLhMLvTrkdVgjntwJveVmjrV7DdChdGtZJZwf53vPmGP1tzupSgHPAdU12Xd3B"
-                                                }
-                                            }
-                                        ],
-                                        "proofValue": "z45hriXHGQWPGosSKBkPNffzZ8Q5A14qpCmsoaC45izMim173jgkyKdp5v9ti3ponwRorv8R2rujKsfLJjgBCkdRc"
-                                    }
-                                }
-                            ],
-                            "proofValue": "z3g2HSSL6j2ZsttZB5wZrnLfTQw8PrCjF4oz6Jg6kSVMS5zn7scCvRP5if3pBAvHMWZu5iLbqgxvP65QKrNCSwCSm"
-                        }
-                    }
+                      }
+                    ],
+                    "proofValue": "z4RWfSZzC9xYVJmRcF7N4WEiWLr8kJPP92eGhCm4hE3hXzASVq69QcQv8232kPGiWNVvkXLfqJdpFqSGaxDueCxw5"
+                  }
                 }
+              ],
+              "proofValue": "zjkeEqofrRGaGKCnA6kFZ33CJ4J3VKU7feHNLwhAwW6qhjHEaQYb2zfggN6sBfxckUrJnobgjgGkDBiqor6UEXyE"
             }
-        ]
-    }
+          },
+          "kakCapability": {
+            "@context": [
+              "https://w3id.org/zcap/v1",
+              "https://w3id.org/security/suites/ed25519-2020/v1"
+            ],
+            "id": "urn:uuid:361c3358-8b7b-4609-8a19-4ba4f5c8b98a",
+            "controller": "did:key:z6Mkg8W1pnNpT5k2fJRsWrEcjokx5Bz9hWm4yQfNty5VyJBL",
+            "parentCapability": "urn:uuid:056df2ff-4195-499f-90c2-9c25bae208bb",
+            "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z19rr2TPDdhTqphgCzsytEXHR/keys/z19kMtaMUNKYrcCb35YH7FG9F",
+            "expires": "2024-01-08T15:01:18Z",
+            "allowedAction": [
+              "deriveSecret"
+            ],
+            "proof": {
+              "type": "Ed25519Signature2020",
+              "created": "2023-10-10T15:01:18Z",
+              "verificationMethod": "did:key:z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3#z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3",
+              "proofPurpose": "capabilityDelegation",
+              "capabilityChain": [
+                "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR",
+                "urn:uuid:5c41152c-966c-4cdb-89f0-1285fa11fae9",
+                {
+                  "@context": [
+                    "https://w3id.org/zcap/v1",
+                    "https://w3id.org/security/suites/ed25519-2020/v1"
+                  ],
+                  "id": "urn:uuid:056df2ff-4195-499f-90c2-9c25bae208bb",
+                  "controller": "did:key:z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3",
+                  "parentCapability": "urn:uuid:5c41152c-966c-4cdb-89f0-1285fa11fae9",
+                  "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z19rr2TPDdhTqphgCzsytEXHR/keys/z19kMtaMUNKYrcCb35YH7FG9F",
+                  "expires": "2024-10-09T14:28:37.000Z",
+                  "allowedAction": [
+                    "deriveSecret"
+                  ],
+                  "proof": {
+                    "type": "Ed25519Signature2020",
+                    "created": "2023-10-10T14:31:40Z",
+                    "verificationMethod": "did:key:z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS#z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS",
+                    "proofPurpose": "capabilityDelegation",
+                    "capabilityChain": [
+                      "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR",
+                      {
+                        "@context": [
+                          "https://w3id.org/zcap/v1",
+                          "https://w3id.org/security/suites/ed25519-2020/v1"
+                        ],
+                        "id": "urn:uuid:5c41152c-966c-4cdb-89f0-1285fa11fae9",
+                        "controller": "did:key:z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS",
+                        "parentCapability": "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR",
+                        "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z19rr2TPDdhTqphgCzsytEXHR/keys/z19kMtaMUNKYrcCb35YH7FG9F",
+                        "expires": "2024-10-09T14:28:37Z",
+                        "allowedAction": [
+                          "deriveSecret"
+                        ],
+                        "proof": {
+                          "type": "Ed25519Signature2020",
+                          "created": "2023-10-10T14:28:37Z",
+                          "verificationMethod": "did:key:z6MkkTRV6NyAtHTuAV4fpFHE8qM1n8fWDNotNR6XjmQfDwhi#z6MkkTRV6NyAtHTuAV4fpFHE8qM1n8fWDNotNR6XjmQfDwhi",
+                          "proofPurpose": "capabilityDelegation",
+                          "capabilityChain": [
+                            "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR"
+                          ],
+                          "proofValue": "z5EFgERpTFkknxitWLMTVpJqaTpRctmAC1qpMJTDc1SXtcPqNSbsZHFgwo6jVgcU8KxGGsYF3r3ThLuhvHvhpcFo2"
+                        }
+                      }
+                    ],
+                    "proofValue": "z2wSa4Q9RDenYGfZk22i5HDBjSoaHD3ZtdFErDpKdbitrWymieEYaeiZDEqSdoZ5XHGGvMdpT5Zc2N8gy96LH8vZP"
+                  }
+                }
+              ],
+              "proofValue": "z2x1a64so4Up7BAh2RFrS5DMPjL8pCFYhxQ2jATzxRA8gya8RX3tiSvuQbUU5YAXYoo1tCCC7WA21GXQcxzvfcc2o"
+            }
+          },
+          "hmacCapability": {
+            "@context": [
+              "https://w3id.org/zcap/v1",
+              "https://w3id.org/security/suites/ed25519-2020/v1"
+            ],
+            "id": "urn:uuid:362e2b6b-ba64-4322-9add-cb915c317746",
+            "controller": "did:key:z6Mkg8W1pnNpT5k2fJRsWrEcjokx5Bz9hWm4yQfNty5VyJBL",
+            "parentCapability": "urn:uuid:6845fde4-03ee-4c2a-9add-f9d33eb69d9e",
+            "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z19rr2TPDdhTqphgCzsytEXHR/keys/z1A2pNaE69dDKt5oowJERm54G",
+            "expires": "2024-01-08T15:01:18Z",
+            "allowedAction": [
+              "sign"
+            ],
+            "proof": {
+              "type": "Ed25519Signature2020",
+              "created": "2023-10-10T15:01:18Z",
+              "verificationMethod": "did:key:z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3#z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3",
+              "proofPurpose": "capabilityDelegation",
+              "capabilityChain": [
+                "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR",
+                "urn:uuid:1d0e1c88-3d7c-4fba-af61-fdb6ab3d00ea",
+                {
+                  "@context": [
+                    "https://w3id.org/zcap/v1",
+                    "https://w3id.org/security/suites/ed25519-2020/v1"
+                  ],
+                  "id": "urn:uuid:6845fde4-03ee-4c2a-9add-f9d33eb69d9e",
+                  "controller": "did:key:z6Mkrt6fiFKsM3eRaUW3N3xvhuEfUA7CcLDB8Q8ztsx7tdC3",
+                  "parentCapability": "urn:uuid:1d0e1c88-3d7c-4fba-af61-fdb6ab3d00ea",
+                  "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z19rr2TPDdhTqphgCzsytEXHR/keys/z1A2pNaE69dDKt5oowJERm54G",
+                  "expires": "2024-10-09T14:28:37.000Z",
+                  "allowedAction": [
+                    "sign"
+                  ],
+                  "proof": {
+                    "type": "Ed25519Signature2020",
+                    "created": "2023-10-10T14:31:40Z",
+                    "verificationMethod": "did:key:z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS#z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS",
+                    "proofPurpose": "capabilityDelegation",
+                    "capabilityChain": [
+                      "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR",
+                      {
+                        "@context": [
+                          "https://w3id.org/zcap/v1",
+                          "https://w3id.org/security/suites/ed25519-2020/v1"
+                        ],
+                        "id": "urn:uuid:1d0e1c88-3d7c-4fba-af61-fdb6ab3d00ea",
+                        "controller": "did:key:z6MkgFRdq2kbmtgEuRe8AcKiwhmavrDCLbYHFBBFrBnUgRfS",
+                        "parentCapability": "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR",
+                        "invocationTarget": "https://artemis.secure-ld.us/kms/keystores/z19rr2TPDdhTqphgCzsytEXHR/keys/z1A2pNaE69dDKt5oowJERm54G",
+                        "expires": "2024-10-09T14:28:37Z",
+                        "allowedAction": [
+                          "sign"
+                        ],
+                        "proof": {
+                          "type": "Ed25519Signature2020",
+                          "created": "2023-10-10T14:28:37Z",
+                          "verificationMethod": "did:key:z6MkkTRV6NyAtHTuAV4fpFHE8qM1n8fWDNotNR6XjmQfDwhi#z6MkkTRV6NyAtHTuAV4fpFHE8qM1n8fWDNotNR6XjmQfDwhi",
+                          "proofPurpose": "capabilityDelegation",
+                          "capabilityChain": [
+                            "urn:zcap:root:https%3A%2F%2Fartemis.secure-ld.us%2Fkms%2Fkeystores%2Fz19rr2TPDdhTqphgCzsytEXHR"
+                          ],
+                          "proofValue": "zijNi9skmpf5CGqaxRXatzuikBh3ZsLHnjjLgWeujCrDVABQw273kB1WaunBz6mDMWJw5161RXWbm21HL92vH3XA"
+                        }
+                      }
+                    ],
+                    "proofValue": "z2N8LbDyp7qhnyDDjVLs4zh5h7qyXq7U1dpfsUESEpka5CJ968MmRLqjb1PHWtBvG2TXKbW52eemqPcvtQM3Dcg3Y"
+                  }
+                }
+              ],
+              "proofValue": "z3MJDYqSmqy2HbcmRA9HQrEffzEzpDwjeAk6ES6PPbD4ZHZKnE53ec9WBviZ3hWjTG5qQrnYC5P3EeeWrui2uhXZr"
+            }
+          }
+        }
+      }
+    ]
+  }
 }
