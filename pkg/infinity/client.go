@@ -148,8 +148,7 @@ func ApplyZCapAuth(settings models.InfinitySettings) (string, string, error) {
 	var target string = zcapInputTarget
 
 	content, data, err := mercury.Request(operation, target)
-	//download - data
-	//request - content
+	
 
 	if err != nil {
 		backend.Logger.Error("Error:", err)
@@ -185,17 +184,6 @@ func (client *Client) req(ctx context.Context, url string, body io.Reader, setti
 
 		return data, res.StatusCode, duration, err
 	}
-
-	/*req, _ := GetRequest(settings, body, query, requestHeaders, true)
-
-	startTime := time.Now()
-	if !CanAllowURL(req.URL.String(), settings.AllowedHosts) {
-		backend.Logger.Error("url is not in the allowed list. make sure to match the base URL with the settings", "url", req.URL.String())
-		return nil, http.StatusUnauthorized, 0, errors.New("requested URL is not allowed. To allow this URL, update the datasource config Security -> Allowed Hosts section")
-	}
-
-
-	res, err := client.HttpClient.Do(req)*/
 
 	duration = time.Since(startTime)
 
