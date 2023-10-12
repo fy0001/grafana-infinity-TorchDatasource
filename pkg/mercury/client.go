@@ -43,7 +43,11 @@ func Request(operation string, target string) ([]byte, []byte, error) {
 
 	// Run Mercury Client Adapter Node.js process
 	go func() {
-		cmd := exec.Command("client-adapter", operation, target)
+		if operation == "download" {
+			// Requires version 3.0.0 of the client adapter
+			operation = "get -d"
+		}
+		cmd := exec.Command("mercury-client", operation, target)
 		var stdout, stderr bytes.Buffer
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr

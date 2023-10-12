@@ -17,8 +17,8 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/mercury"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
+	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/mercury"
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
 )
 
@@ -138,21 +138,21 @@ func ApplyZCapAuth(settings models.InfinitySettings) (string, string, error) {
 	var dataT []byte
 	var err error
 
-	zcapInputTarget := dummyHeader
+	/*zcapInputTarget := dummyHeader
 
 	if includeSect {
 		zcapInputTarget = settings.ZCapJsonPath
 
-	}
+	}*/
+
 	var operation string = "download"
-	var target string = zcapInputTarget
+	var target string = "https://artemis.secure-ld.us/edvs/z19vA2WMxAFzKE4weVKs5Mftd/documents/z19rKqArg1TK83CAsemAPiwvrarget"
 
-	content, data, err := mercury.Request(operation, target)
-	
-
+	content, data, err := mercury.Request(operation, target) //error begins here
 	if err != nil {
 		backend.Logger.Error("Error:", err)
 	}
+
 	contentT = content
 	dataT = data
 
@@ -178,10 +178,10 @@ func (client *Client) req(ctx context.Context, url string, body io.Reader, setti
 	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
 		console, data, err := ApplyZCapAuth(settings)
 
-		backend.Logger.Info("entered in zcap", console) //displays in powershell log when running
+		backend.Logger.Info("entered in zcap", data) //displays in powershell log when running
 		res.StatusCode = 200
 		duration = time.Since(startTime)
-
+		_ = console
 		return data, res.StatusCode, duration, err
 	}
 
