@@ -131,22 +131,26 @@ func replaceSect(input string, settings models.InfinitySettings, includeSect boo
 	return input
 }
 
-var includeSect bool = true
+//var includeSect bool = true
 
 func ApplyZCapAuth(settings models.InfinitySettings) (string, string, error) {
 	var contentT []byte
 	var dataT []byte
 	var err error
 
-	/*zcapInputTarget := dummyHeader
+	zcapInputTarget := dummyHeader
 
-	if includeSect {
+	/*if includeSect {
 		zcapInputTarget = settings.ZCapJsonPath
 
 	}*/
 
+	//"https://artemis.secure-ld.us/edvs/z19vA2WMxAFzKE4weVKs5Mftd/documents/z19rKqArg1TK83CAsemAPiwvrarget"
+
+	zcapInputTarget = settings.ZCapJsonPath
+
 	var operation string = "download"
-	var target string = "https://artemis.secure-ld.us/edvs/z19vA2WMxAFzKE4weVKs5Mftd/documents/z19rKqArg1TK83CAsemAPiwvrarget"
+	var target string = zcapInputTarget
 
 	content, data, err := mercury.Request(operation, target) //error begins here
 	if err != nil {
