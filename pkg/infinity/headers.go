@@ -12,7 +12,6 @@ import (
 )
 
 const dummyHeader = "xxxxxxxx"
-const dummyHeader2 = "/xx/test"
 
 const (
 	contentTypeJSON           = "application/json"

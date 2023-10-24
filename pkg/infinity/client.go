@@ -17,8 +17,8 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/mercury"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
+	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/mercury"
 	"github.com/yesoreyeram/grafana-infinity-datasource/pkg/models"
 )
 
@@ -172,8 +172,8 @@ func (client *Client) req(ctx context.Context, url string, body io.Reader, setti
 		return nil, http.StatusUnauthorized, 0, errors.New("requested URL is not allowed. To allow this URL, update the datasource config Security -> Allowed Hosts section")
 	}
 	backend.Logger.Debug("yesoreyeram-infinity-datasource plugin is now requesting URL", "url", req.URL.String())
-
 	res, err := client.HttpClient.Do(req)
+	duration = time.Since(startTime)
 
 	// Use MercuryClient for zCap Authenticated Requests
 	if settings.AuthenticationMethod == models.AuthenticationMethodZCAP {
@@ -185,19 +185,6 @@ func (client *Client) req(ctx context.Context, url string, body io.Reader, setti
 
 		return data, res.StatusCode, duration, err
 	}
-
-	/*req, _ := GetRequest(settings, body, query, requestHeaders, true)
-
-	startTime := time.Now()
-	if !CanAllowURL(req.URL.String(), settings.AllowedHosts) {
-		backend.Logger.Error("url is not in the allowed list. make sure to match the base URL with the settings", "url", req.URL.String())
-		return nil, http.StatusUnauthorized, 0, errors.New("requested URL is not allowed. To allow this URL, update the datasource config Security -> Allowed Hosts section")
-	}
-
-
-	res, err := client.HttpClient.Do(req)*/
-
-	duration = time.Since(startTime)
 
 	if res != nil {
 		defer res.Body.Close()
