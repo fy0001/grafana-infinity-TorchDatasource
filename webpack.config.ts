@@ -1,5 +1,5 @@
 // webpack.config.ts
-import type { Configuration } from 'webpack';
+import { Configuration, webpack, ProvidePlugin } from 'webpack';
 import { mergeWithRules } from 'webpack-merge';
 import grafanaConfig from './.config/webpack/webpack.config';
 
@@ -26,9 +26,15 @@ const config = async (env): Promise<Configuration> => {
         path: require.resolve('path-browserify'),
         util: require.resolve('util'),
         timers: require.resolve("timers-browserify"),
-        buffer: require.resolve("buffer")
+        buffer: require.resolve("buffer/")
       },
     },
+
+    plugins: [
+     new ProvidePlugin({
+          Buffer: ['buffer', 'Buffer'],
+      }),
+  ], 
     performance: {
       hints: false,
       maxEntrypointSize: 512000,
@@ -36,7 +42,7 @@ const config = async (env): Promise<Configuration> => {
     },
   };
 
-
+ 
 
 
   return mergeWithRules({
