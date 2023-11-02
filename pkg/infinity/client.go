@@ -181,7 +181,7 @@ func (client *Client) req(ctx context.Context, url string, body io.Reader, setti
 
 		backend.Logger.Info("entered in zcap", console) //displays in powershell log when running
 		res.StatusCode = 200
-		duration = time.Since(startTime)
+		//duration = time.Since(startTime)
 
 		return data, res.StatusCode, duration, err
 	}
