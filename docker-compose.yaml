@@ -1,14 +1,17 @@
 version: '3.7'
+
 services:
   grafana:
-    container_name: infinityPlugin
-    image: grafana/grafana-enterprise:${GF_VERSION:-main}
-    # image: grafana/grafana-enterprise:${GF_VERSION:-8.4.7}
-    # image: grafana/grafana-enterprise:${GF_VERSION:-9.4.3}
-    # image: grafana/grafana-enterprise:${GF_VERSION:-latest}
-   
+    container_name: 'infinityPlugin'
+    image: grafana/grafana-enterprise:${GF_VERSION:-9.4.3}
+    platform: "linux/amd64"
+    build:
+      context: ./.config
+      args:
+        grafana_image: ${GRAFANA_IMAGE:-grafana-enterprise}
+        grafana_version: ${GRAFANA_VERSION:-9.4.3}
     ports:
-      - '3001:3000'
+      - 3001:3000
     volumes:
       - ./provisioning/dashboards-actual/:/dashboards/
       - ./provisioning:/etc/grafana/provisioning
@@ -22,8 +25,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=apofapof
       - GF_SECURITY_ANGULAR_SUPPORT_ENABLED=false
       - GF_SECURITY_CSRF_ALWAYS_CHECK=true
-      - GF_ENTERPRISE_LICENSE_TEXT=$GF_ENTERPRISE_LICENSE_TEXT
-      # - GF_FEATURE_TOGGLES_ENABLE=trimDefaults disableEnvelopeEncryption database_metrics live-service-web-workerqueryOverLive panelTitleSearch prometheusAzureOverrideAudience publicDashboards publicDashboardsEmailSharing lokiLive featureHighlights migrationLocking storage exploreMixedDatasource newTraceViewHeader correlations cloudWatchDynamicLabels datasourceQueryMultiStatus traceToMetrics newDBLibrary validateDashboardsOnSave autoMigrateOldPanels disableAngular prometheusWideSeries canvasPanelNesting scenes disableSecretsCompatibility logRequestsInstrumentedAsUnknown dataConnectionsConsole internationalization topnav grpcServer entityStore cloudWatchCrossAccountQuerying redshiftAsyncQueryDataSupport athenaAsyncQueryDataSupport newPanelChromeUI showDashboardValidationWarnings mysqlAnsiQuotes accessControlOnCall nestedFolders accessTokenExpirationCheck showTraceId datasourceOnboarding emptyDashboardPage authnService disablePrometheusExemplarSampling alertingBacktesting editPanelCSVDragAndDrop alertingNoNormalState logsSampleInExplore logsContextDatasourceUi lokiQuerySplitting lokiQuerySplittingConfig individualCookiePreferences onlyExternalOrgRoleSync traceqlSearch prometheusMetricEncyclopedia timeSeriesTable prometheusResourceBrowserCache influxdbBackendMigration clientTokenRotation prometheusDataplane lokiMetricDataplane dataplaneFrontendFallback disableSSEDataplane alertStateHistoryLokiSecondary alertStateHistoryLokiPrimary alertStateHistoryLokiOnly unifiedRequestLog renderAuthJWT pyroscopeFlameGraph externalServiceAuth useCachingService enableElasticsearchBackendQuerying authenticationConfigUI pluginsAPIManifestKey advancedDataSourcePicker opensearchDetectVersion enableDatagridEditing
+      - GF_ENTERPRISE_LICENSE_TEXT=${GF_ENTERPRISE_LICENSE_TEXT}
       - GF_FEATURE_TOGGLES_ENABLE=publicDashboards topnav dataConnectionsConsole newPanelChromeUI emptyDashboardPage correlations nestedFolders advancedDataSourcePicker
       - GF_PLUGIN_YESOREYERAM_INFINITY_DATASOURCE_TRACING=true
       - GF_INSTANCE_OTLP_ADDRESS=${GF_INSTANCE_OTLP_ADDRESS:-foo}

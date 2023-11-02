@@ -1,0 +1,11 @@
+{
+  "extends": "./.config/.eslintrc",
+  "overrides": [
+    {
+      "files": ["src/**/*.{ts,tsx}"],
+      "rules": {
+        "deprecation/deprecation": "off"
+      }
+    }
+  ]
+}
