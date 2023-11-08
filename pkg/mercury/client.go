@@ -47,7 +47,11 @@ func Request(operation string, target string) ([]byte, []byte, error) {
 			// Requires version 3.0.0 of the client adapter
 			operation = "get -d"
 		}
+		//absexe, _ := filepath.Abs("C:/Program Files/nodejs/mercury-client") fork/exec /usr/share/grafana/C:\Program Files\nodejs\mercury-client: no such file or directory
+		//cmd.Dir = "C:/Program Files/nodejs/mercury-client" error getting data frame. chdir C:\Program Files\nodejs: no such file or directory
+
 		cmd := exec.Command("mercury-client", operation, target)
+
 		var stdout, stderr bytes.Buffer
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
