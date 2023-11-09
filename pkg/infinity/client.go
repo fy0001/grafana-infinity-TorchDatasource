@@ -55,14 +55,25 @@ func GetTLSConfigFromSettings(settings models.InfinitySettings) (*tls.Config, er
 	return tlsConfig, nil
 }
 
-func getBaseHTTPClient(settings models.InfinitySettings) *http.Client {
+func getBaseHTTPClient(ctx context.Context, settings models.InfinitySettings) *http.Client {
 	tlsConfig, err := GetTLSConfigFromSettings(settings)
 	if err != nil {
 		return nil
 	}
-	transport := &http.Transport{
-		Proxy:           http.ProxyFromEnvironment,
-		TLSClientConfig: tlsConfig,
+	transport := &http.Transport{TLSClientConfig: tlsConfig}
+	switch settings.ProxyType {
+	case models.ProxyTypeNone:
+		backend.Logger.Debug("proxy type is set to none. Not using the proxy")
+	case models.ProxyTypeUrl:
+		backend.Logger.Debug("proxy type is set to url. Using the proxy", "proxy_url", settings.ProxyUrl)
+		u, err := url.Parse(settings.ProxyUrl)
+		if err != nil {
+			backend.Logger.Error("error parsing proxy url", "err", err.Error(), "proxy_url", settings.ProxyUrl)
+			return nil
+		}
+		transport.Proxy = http.ProxyURL(u)
+	default:
+		transport.Proxy = http.ProxyFromEnvironment
 	}
 	return &http.Client{
 		Transport: transport,
@@ -70,7 +81,9 @@ func getBaseHTTPClient(settings models.InfinitySettings) *http.Client {
 	}
 }
 
-func NewClient(settings models.InfinitySettings) (client *Client, err error) {
+func NewClient(ctx context.Context, settings models.InfinitySettings) (client *Client, err error) {
+	_, span := tracing.DefaultTracer().Start(ctx, "NewClient")
+	defer span.End()
 	if settings.AuthenticationMethod == "" {
 		settings.AuthenticationMethod = models.AuthenticationMethodNone
 		if settings.BasicAuthEnabled {
@@ -80,14 +93,15 @@ func NewClient(settings models.InfinitySettings) (client *Client, err error) {
 			settings.AuthenticationMethod = models.AuthenticationMethodForwardOauth
 		}
 	}
-	httpClient := getBaseHTTPClient(settings)
+	httpClient := getBaseHTTPClient(ctx, settings)
 	if httpClient == nil {
+		span.RecordError(errors.New("invalid http client"))
 		return nil, errors.New("invalid http client")
 	}
-	httpClient = ApplyDigestAuth(httpClient, settings)
-	httpClient = ApplyOAuthClientCredentials(httpClient, settings)
-	httpClient = ApplyOAuthJWT(httpClient, settings)
-	httpClient = ApplyAWSAuth(httpClient, settings)
+	httpClient = ApplyDigestAuth(ctx, httpClient, settings)
+	httpClient = ApplyOAuthClientCredentials(ctx, httpClient, settings)
+	httpClient = ApplyOAuthJWT(ctx, httpClient, settings)
+	httpClient = ApplyAWSAuth(ctx, httpClient, settings)
 	client = &Client{
 		Settings:   settings,
 		HttpClient: httpClient,
@@ -95,6 +109,8 @@ func NewClient(settings models.InfinitySettings) (client *Client, err error) {
 	if settings.AuthenticationMethod == models.AuthenticationMethodAzureBlob {
 		cred, err := azblob.NewSharedKeyCredential(settings.AzureBlobAccountName, settings.AzureBlobAccountKey)
 		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(500, err.Error())
 			return nil, fmt.Errorf("invalid azure blob credentials. %s", err)
 		}
 		clientUrl := "https://%s.blob.core.windows.net/"
@@ -106,9 +122,13 @@ func NewClient(settings models.InfinitySettings) (client *Client, err error) {
 		}
 		azClient, err := azblob.NewClientWithSharedKeyCredential(clientUrl, cred, nil)
 		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(500, err.Error())
 			return nil, fmt.Errorf("invalid azure blob client. %s", err)
 		}
 		if azClient == nil {
+			span.RecordError(errors.New("invalid/empty azure blob client"))
+			span.SetStatus(500, "invalid/empty azure blob client")
 			return nil, errors.New("invalid/empty azure blob client")
 		}
 		client.AzureBlobClient = azClient
@@ -313,8 +333,16 @@ func GetQueryBody(query models.Query) io.Reader {
 			}
 			body = strings.NewReader(form.Encode())
 		case "graphql":
-			jsonData := map[string]string{
-				"query": query.URLOptions.BodyGraphQLQuery,
+			var variables map[string]interface{}
+			if query.URLOptions.BodyGraphQLVariables != "" {
+				err := json.Unmarshal([]byte(query.URLOptions.BodyGraphQLVariables), &variables)
+				if err != nil {
+					backend.Logger.Error("Error parsing graphql variable json", err)
+				}
+			}
+			jsonData := map[string]interface{}{
+				"query":     query.URLOptions.BodyGraphQLQuery,
+				"variables": variables,
 			}
 			jsonValue, _ := json.Marshal(jsonData)
 			body = strings.NewReader(string(jsonValue))

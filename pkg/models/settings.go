@@ -61,6 +61,14 @@ type AWSSettings struct {
 	Service  string      `json:"service"`
 }
 
+type ProxyType string
+
+const (
+	ProxyTypeNone ProxyType = "none"
+	ProxyTypeEnv  ProxyType = "env"
+	ProxyTypeUrl  ProxyType = "url"
+)
+
 type InfinitySettings struct {
 	IsMock                   bool
 	AuthenticationMethod     string
@@ -88,6 +96,8 @@ type InfinitySettings struct {
 	TLSCACert                string
 	TLSClientCert            string
 	TLSClientKey             string
+	ProxyType                ProxyType
+	ProxyUrl                 string
 	AllowedHosts             []string
 	EnableOpenAPI            bool
 	OpenAPIVersion           string
@@ -161,6 +171,8 @@ type InfinitySettingsJson struct {
 	TLSClientAuth            bool           `json:"tlsAuth,omitempty"`
 	TLSAuthWithCACert        bool           `json:"tlsAuthWithCACert,omitempty"`
 	TimeoutInSeconds         int64          `json:"timeoutInSeconds,omitempty"`
+	ProxyType                ProxyType      `json:"proxy_type,omitempty"`
+	ProxyUrl                 string         `json:"proxy_url,omitempty"`
 	AllowedHosts             []string       `json:"allowedHosts,omitempty"`
 	EnableOpenAPI            bool           `json:"enableOpenApi,omitempty"`
 	OpenAPIVersion           string         `json:"openApiVersion,omitempty"`
@@ -207,6 +219,11 @@ func LoadSettings(config backend.DataSourceInstanceSettings) (settings InfinityS
 		settings.TLSClientAuth = infJson.TLSClientAuth
 		settings.TLSAuthWithCACert = infJson.TLSAuthWithCACert
 		settings.TimeoutInSeconds = 60
+		settings.ProxyType = infJson.ProxyType
+		settings.ProxyUrl = infJson.ProxyUrl
+		if settings.ProxyType == "" {
+			settings.ProxyType = ProxyTypeEnv
+		}
 		if infJson.TimeoutInSeconds > 0 {
 			settings.TimeoutInSeconds = infJson.TimeoutInSeconds
 		}

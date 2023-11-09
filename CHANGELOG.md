@@ -1,5 +1,19 @@
 # Change Log
 
+## 2.2.1
+
+⚙️ **Chore**: Added distributed tracing and contextual logging
+
+🐛 **UI** Removed graphql variable editor styling
+
+## 2.2.0
+
+🚀 **Proxy**: Support for configuring per-datasource proxy url
+
+🚀 **GraphQL**: Added Support for GraphQL Variables
+
+🐛 **OAuth2**: Fixes OAuth2 configuration UI crash
+
 ## 2.1.0
 
 🚀 **OAuth2**: Added ability to set auth style in client credentials
@@ -20,9 +34,11 @@
 
 🚀 **Config Editor**: Preview / Sample request added to some authentication types
 
-🛡️ **Security**: Backend binaries are compiled with golang 1.21.0 which also contains [security fixes](https://groups.google.com/g/golang-announce/c/2q13H6LEEx0) from previous versions
+🛡️ **Security**: Backend binaries are compiled with golang 1.21.3 which also contains [security fixes](https://groups.google.com/g/golang-announce/c/2q13H6LEEx0) from previous versions
 
 🐛 **UI**: Fixed a bug in query editor where buttons were rendered incorrectly
+
+🐛 **OAuth2**: Applied a fix for the UI crash when editing OAuth2 section in the config editor
 
 🐛 **URL normalization**: Fixed a bug where some github URLs were interpolated incorrectly. Fixes [#604](https://github.com/yesoreyeram/grafana-infinity-datasource/issues/604)
 
@@ -30,7 +46,7 @@
 
 🐛 **Docs**: Removed `Cmd/Ctrl+F` key binding in the docs website in favour of native browser search
 
-⚙️ **Chore**: Grafana plugin SDK `grafana/grafana-plugin-sdk-go` updated to `v0.174.0` from `v0.166.0`
+⚙️ **Chore**: Grafana plugin SDK `grafana/grafana-plugin-sdk-go` updated to `v0.174.0` from `v0.189.0`
 
 ⚙️ **Chore**: Updated backend packages
 

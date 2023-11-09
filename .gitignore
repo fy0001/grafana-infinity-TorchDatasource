@@ -31,4 +31,5 @@ website/next-env.d.ts
 work/
 yarn-debug.log*
 yarn-error.log*
+docker/blocks/tempo/tempo-data
 .npmrc
