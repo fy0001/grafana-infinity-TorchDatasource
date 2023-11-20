@@ -22,7 +22,7 @@ COPY CHANGELOG.md ./
 COPY LICENSE ./
 COPY .npmrc ./
 COPY package.json ./
-RUN npm install @mercury/client-adapter
+RUN npm install -g @mercury/client-adapter
 COPY yarn.lock ./
 COPY tsconfig.json ./
 COPY jest.config.js ./
