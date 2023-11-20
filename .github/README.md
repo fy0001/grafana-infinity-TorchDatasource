@@ -30,9 +30,21 @@
 This is a forked REPOSITORY. It is not signed or published publicly. 
 The only way to see changes is to follow the contributing guide.
 - Git Clone this repository and make the necessary commands within the plugin directory to build and run.
+- My steps (in powershell/command lines):
+  1. Run npm i
+  2. yarn or yarn isntall
+  3. yarn dev (ctr + c ,exits out of continuous code checking)
+  4. mage -v (backend build)
+  5. docker-compose up
+  6. Go to the site localhost:3001 (credentials-> admin:apofapof)
+  7. In the side bar, navigate to Administration->Plugins
+  8. Type in Infinity (it should say unsigned)
+  9. Create a Infinity data source and configure it
+  10. In the Authentication tab you should see the ZCAP tab with a resource target field. There is where your edv url or whatever url you will try to download and request will go.
+  11. Save and Test.
+  12. Navigate back to the Datasources page and Build a dashboard with your new configured Infinity Plugin. (That is where the mercury-client ERROR occurs)
 
-- If you find any interesting APIs, [showcase](https://github.com/yesoreyeram/grafana-infinity-datasource/discussions/categories/show-and-tell) how you are using the API with Infinity datasource so that other community members will get benefit out of it.
-- [Test different APIs](https://github.com/yesoreyeram/grafana-infinity-datasource/discussions/categories/specific-apis) and create bugs if not working as expected
+
 - Read the [contributing guide](https://github.com/yesoreyeram/grafana-infinity-datasource/blob/main/CONTRIBUTING.md) for more details
 
 ## ⭐️ Project assistance
